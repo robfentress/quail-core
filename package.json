@@ -10,7 +10,9 @@
   },
   "bugs": "http://github.com/jessebeach/quail-core/issues",
   "dependencies": {
-    "core-js": "^0.9.13"
+    "core-js": "^0.9.13",
+    "glob": "^6.0.1",
+    "mkdirp": "^0.5.1"
   },
   "peerDependencies": {},
   "optionalDependencies": {},
