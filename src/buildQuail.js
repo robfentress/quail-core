@@ -4,45 +4,37 @@ const fs = require('fs');
 const glob = require('glob');
 const mkdirp = require('mkdirp');
 const path = require('path');
-const quailDevelopmentFilesPath = __dirname + '/../src/development/**/*.js';
 
 const cwd = process.cwd();
 
 function runBrowserify () {
-  glob(quailDevelopmentFilesPath, function (error, developmentFiles) {
-    if (error) {
+  mkdirp(path.join(cwd, 'dist'), function (err) {
+    if (err) {
+      console.log(err);
       process.exit(1);
     }
-    mkdirp(path.join(cwd, 'dist'), function (err) {
-      if (err) {
-        console.log(err);
-        process.exit(1);
-      }
-      else {
-        browserify({
-          paths: [
-            './config/',
-            './src/core/',
-            './src/core/lib',
-            './src/js/',
-            './src/js/components/',
-            './src/js/strings/',
-            './src/assessments/',
-            './vendor/',
-          ],
-          options: {
-            debug: false
-          }
+    else {
+      browserify({
+        paths: [
+          path.join(__dirname, 'core'),
+          path.join(__dirname, 'component')
+        ],
+        options: {
+          debug: false
+        }
+      })
+        .add(path.join(__dirname, 'core/Quail.js'))
+        .transform(babelify)
+        .bundle()
+        .on('error', function (err) {
+          console.log('Error : ' + err.message);
         })
-          .add('./config/AllTests.js')
-          .transform(babelify)
-          .bundle()
-          .on('error', function (err) {
-            console.log('Error : ' + err.message);
-          })
-          .pipe(fs.createWriteStream('dist/runInBrowser.js'));
-      }
-    });
+        .pipe(
+          fs.createWriteStream(
+            path.join(cwd, 'dist/runInBrowser.js')
+          )
+        );
+    }
   });
 }
 

@@ -4,9 +4,8 @@
 
 require('babelify/polyfill');
 
-var TestCollection = require('TestCollection');
-var wcag2 = require('wcag2');
-var AllTests = require('AllTests');
+const TestCollection = require('TestCollection');
+const wcag2 = require('wcag2');
 
 var quail = {
 
