@@ -8,18 +8,18 @@ const quailDevelopmentFilesPath = __dirname + '/../src/development/**/*.js';
 
 const cwd = process.cwd();
 
-function browserify () {
+function runBrowserify () {
   glob(quailDevelopmentFilesPath, function (error, developmentFiles) {
     if (error) {
       process.exit(1);
     }
-    mkdirp('dist', function (err) {
+    mkdirp(path.join(cwd, 'dist'), function (err) {
       if (err) {
         console.log(err);
+        process.exit(1);
       }
       else {
         browserify({
-          entries: developmentFiles,
           paths: [
             './config/',
             './src/core/',
@@ -47,5 +47,5 @@ function browserify () {
 }
 
 module.exports = function buildQuail (config) {
-
+  runBrowserify();
 };
