@@ -47,8 +47,6 @@
     "sinon": "^1.10.3"
   },
   "scripts": {
-    "compile": "babel -e -d lib/ src/",
-    "prepublish": "npm run compile",
     "test": "jscs -c .jscsrc src && eslint -c .eslintrc src && karma start"
   },
   "main": "./src/index.js",
