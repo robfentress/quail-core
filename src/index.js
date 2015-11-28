@@ -1,7 +1,7 @@
 const buildQuail = require('./buildQuail');
 
 module.exports = {
-  build: function () {
-    buildQuail();
+  build: function (config) {
+    buildQuail(config);
   }
 };

@@ -6,6 +6,7 @@ require('babelify/polyfill');
 
 const TestCollection = require('TestCollection');
 const wcag2 = require('wcag2');
+const AllTests = require('AllTests');
 
 var quail = {
 
@@ -145,5 +146,5 @@ var quail = {
     return false;
   }
 };
-
-module.exports = window.quail = quail;
+debugger;
+module.exports = quail;
