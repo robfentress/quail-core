@@ -6,7 +6,7 @@ require('babelify/polyfill');
 
 const TestCollection = require('TestCollection');
 const wcag2 = require('wcag2');
-const AllTests = require('AllTests');
+const _Assessments = require('_Assessments');
 
 var quail = {
 
@@ -56,7 +56,7 @@ var quail = {
       if (assessmentList.constructor === Array) {
         for (var i = 0, il = assessmentList.length; i < il; ++i) {
           let name = assessmentList[i];
-          let mod = AllTests.get(name);
+          let mod = _Assessments.get(name);
           if (mod) {
             quail.tests.set(name, {
               type: 'custom',
@@ -71,7 +71,7 @@ var quail = {
         var name;
         for (name in assessmentList) {
           if (assessmentList.hasOwnProperty(name)) {
-            let mod = AllTests.get(name);
+            let mod = _Assessments.get(name);
             if (mod) {
               quail.tests.set(name, {
                 type: 'custom',
@@ -146,5 +146,4 @@ var quail = {
     return false;
   }
 };
-debugger;
-module.exports = quail;
+module.exports = window.quail = quail;
