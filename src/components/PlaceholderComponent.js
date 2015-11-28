@@ -7,7 +7,7 @@ var IsUnreadable = require('IsUnreadable');
 var PlaceholdersStringsComponent = require('PlaceholdersStringsComponent');
 var $ = require('jquery/dist/jquery');
 
-var PlaceholderComponent = function (quail, test, Case, options) {
+var PlaceholderComponent = function (test, Case, options) {
 
   var resolve = function (element, resolution) {
     test.add(Case({

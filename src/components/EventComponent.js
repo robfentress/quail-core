@@ -5,7 +5,7 @@
 var HasEventListenerComponent = require('HasEventListenerComponent');
 var $ = require('jquery/dist/jquery');
 
-var EventComponent = function (quail, test, Case, options) {
+var EventComponent = function (test, Case, options) {
   var $scope = test.get('$scope');
   var $items = options.selector && $scope.find(options.selector);
   // Bail if nothing was found.
