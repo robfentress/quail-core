@@ -1,3 +1,4 @@
+const Case = require('Case');
 var ContainsReadableTextComponent = require('ContainsReadableTextComponent');
 var $ = require('jquery/dist/jquery');
 var LabelComponent = function (test, options) {

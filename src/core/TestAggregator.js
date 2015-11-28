@@ -1,4 +1,5 @@
 var jQuery = require('jquery/dist/jquery');
+const wcag2 = require('wcag2');
 
 var TestAggregator = (function () {
   var pointerMap = {

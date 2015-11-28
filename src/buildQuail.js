@@ -5,7 +5,6 @@
 const babelify = require('babelify');
 const browserify = require('browserify');
 const fs = require('fs');
-const glob = require('glob');
 const mkdirp = require('mkdirp');
 const path = require('path');
 
@@ -16,12 +15,11 @@ function runBrowserify (config) {
   let outputPath = path.join(cwd, 'dist');
   let tmpPath = path.join(__dirname, '..', 'tmp');
   let conjoinedAssessmentsFile = path.join(tmpPath, '_Assessments.js');
-  let conjoinedAssessmentsModule = path.join(tmpPath, '_Assessments');
   let paths = [
     path.join(__dirname, 'core'),
     path.join(__dirname, 'components'),
     path.join(__dirname, 'build'),
-    tmpPath,
+    tmpPath
   ];
   paths = paths.concat((config.requirePaths || []));
   mkdirp(outputPath, function (err) {

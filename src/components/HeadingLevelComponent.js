@@ -1,3 +1,4 @@
+const Case = require('Case');
 var HeadingLevelComponent = function (test, options) {
   var priorLevel = false;
   test.get('$scope').find(':header').each(function () {

@@ -2,6 +2,7 @@
  * Test callback for tests that look for script events
  *  (like a mouse event has a keyboard event as well).
  */
+const Case = require('Case');
 var HasEventListenerComponent = require('HasEventListenerComponent');
 var $ = require('jquery/dist/jquery');
 
