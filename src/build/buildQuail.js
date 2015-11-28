@@ -1,11 +1,11 @@
-var fs = require('fs');
-var mkdirp = require('mkdirp');
-var browserify = require('browserify');
-var babelify = require('babelify');
-var path = require('path');
-var glob = require('glob');
-var quailDevelopmentFilesPath = __dirname + '/../src/development/**/*.js';
-// Gather the spec files and add them to the Mocha run.
+const babelify = require('babelify');
+const browserify = require('browserify');
+const fs = require('fs');
+const glob = require('glob');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const quailDevelopmentFilesPath = __dirname + '/../src/development/**/*.js';
+
 glob(quailDevelopmentFilesPath, function (error, developmentFiles) {
   if (error) {
     process.exit(1);
@@ -41,3 +41,7 @@ glob(quailDevelopmentFilesPath, function (error, developmentFiles) {
     }
   });
 });
+
+module.exports = function buildQuail (config) {
+
+};
