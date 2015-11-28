@@ -1,4 +1,4 @@
-var HeadingLevelComponent = function (test, Case, options) {
+var HeadingLevelComponent = function (test, options) {
   var priorLevel = false;
   test.get('$scope').find(':header').each(function () {
     var level = parseInt($(this).get(0).tagName.substr(-1, 1), 10);

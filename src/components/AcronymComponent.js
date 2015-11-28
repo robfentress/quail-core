@@ -1,4 +1,4 @@
-var AcronymComponent = function (test, Case) {
+var AcronymComponent = function (test) {
   test.get('$scope').each(function () {
     var $scope = $(this);
     var alreadyReported = {};
