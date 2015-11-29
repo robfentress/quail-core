@@ -2,6 +2,8 @@
  * @providesModule quail
  */
 
+'use strict';
+
 require('babel-polyfill/dist/polyfill');
 
 const TestCollection = require('TestCollection');
