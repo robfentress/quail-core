@@ -2,10 +2,11 @@
  * Test callback for tests that look for script events
  *  (like a mouse event has a keyboard event as well).
  */
+const Case = require('Case');
 var HasEventListenerComponent = require('HasEventListenerComponent');
 var $ = require('jquery/dist/jquery');
 
-var EventComponent = function (quail, test, Case, options) {
+var EventComponent = function (test, options) {
   var $scope = test.get('$scope');
   var $items = options.selector && $scope.find(options.selector);
   // Bail if nothing was found.

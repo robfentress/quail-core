@@ -9,7 +9,7 @@
 
 work
 build
-dist
+/dist
 pids
 logs
 results
@@ -19,6 +19,7 @@ html-report
 xunit.xml
 node_modules
 npm-debug.log
+tmp
 
 .project
 .idea

@@ -2,12 +2,13 @@
  * Placeholder test - checks that an attribute or the content of an
  * element itself is not a placeholder (i.e. 'click here' for links).
  */
+const Case = require('Case');
 var CleanStringComponent = require('CleanStringComponent');
 var IsUnreadable = require('IsUnreadable');
 var PlaceholdersStringsComponent = require('PlaceholdersStringsComponent');
 var $ = require('jquery/dist/jquery');
 
-var PlaceholderComponent = function (quail, test, Case, options) {
+var PlaceholderComponent = function (test, options) {
 
   var resolve = function (element, resolution) {
     test.add(Case({

@@ -15,6 +15,7 @@ module.exports = function(karma) {
     // list of files / patterns to load in the browser
     files: [
       'src/core/*.js',
+      'test/__mocks__/*.js',
       // Specs
       'test/core/*Spec.js',
     ],
@@ -23,6 +24,9 @@ module.exports = function(karma) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'src/core/*.js': [
+        'browserify'
+      ],
+      'test/__mocks__/*.js': [
         'browserify'
       ],
       'test/core/*Spec.js': [
@@ -73,6 +77,7 @@ module.exports = function(karma) {
     browserify: {
       paths: [
         'src/core/',
+        'test/__mocks__/'
       ],
       debug: true,
       transform: [
