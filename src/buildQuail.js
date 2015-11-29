@@ -50,7 +50,7 @@ function runBrowserify (config) {
         });
         if (filename === 'dist/runInBrowser.js') {
           // Add the module that will output results to the console.
-          buff.add(path.join(__dirname, 'build/runQuailOutputToConsole.js'));
+          buff.add(path.join(__dirname, 'etc/runQuailOutputToConsole.js'));
         }
         buff
           .transform(babelify)
