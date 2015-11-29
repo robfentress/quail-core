@@ -18,7 +18,7 @@ function runBrowserify (config) {
   let paths = [
     path.join(__dirname, 'core'),
     path.join(__dirname, 'components'),
-    path.join(__dirname, 'build'),
+    path.join(__dirname, 'etc'),
     tmpPath
   ];
   paths = paths.concat((config.requirePaths || []));
