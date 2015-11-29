@@ -32,32 +32,35 @@ function runBrowserify (config) {
         throw err;
         process.exit(1);
       }
-      let buff = browserify({
-        paths: paths,
-        options: {
-          debug: false
-        }
-      }).add(path.join(__dirname, 'core/Quail.js'));
-      // Load required modules.
-      (config.requireModules || []).forEach(function (mod) {
-        buff.require(mod);
-      });
-      // Add the module that will output results to the console.
-      buff.add(path.join(__dirname, 'build/runQuailOutputToConsole.js'));
-      // Load the assessments.
-      buff.add(conjoinedAssessmentsFile);
-      // Babelify and write out the file.
-      buff
-        .transform(babelify)
-        .bundle()
-        .on('error', function (err) {
-          console.log('Error : ' + err.message);
+      ['dist/runInBrowser.js', 'dist/bundle.js'].forEach(function (filename) {
+        let buff = browserify({
+          paths: paths,
+          options: {
+            debug: false
+          }
         })
-        .pipe(
-          fs.createWriteStream(
-            path.join(cwd, 'dist/runInBrowser.js')
-          )
-        );
+          .on('error', function (err) {
+            console.error('Error : ' + err.message);
+          })
+          .add(path.join(__dirname, 'core/Quail.js'))
+          .add(conjoinedAssessmentsFile);
+        // Load required modules.
+        (config.requireModules || []).forEach(function (mod) {
+          buff.require(mod);
+        });
+        if (filename === 'dist/runInBrowser.js') {
+          // Add the module that will output results to the console.
+          buff.add(path.join(__dirname, 'build/runQuailOutputToConsole.js'));
+        }
+        buff
+          .transform(babelify)
+          .bundle()
+          .pipe(
+            fs.createWriteStream(
+              path.join(cwd, filename)
+            )
+          );
+      });
     };
     // Create a module file with the required assessments.
     fs.readFile(path.join(cwd, config.requireAssessmentModules[0]), function (err, data) {
