@@ -1,4 +1,4 @@
-const buildQuail = require('./buildQuail');
+const buildQuail = require('./lib/buildQuail');
 
 module.exports = {
   build: function (config) {

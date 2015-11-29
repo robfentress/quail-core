@@ -42,14 +42,21 @@
     "mkdirp": "^0.5.1",
     "mocha": "^2.2.1",
     "new-element": "0.0.2",
+    "npm-watch": "0.0.1",
     "should": "^5.0.1",
     "sinon": "^1.10.3"
   },
   "scripts": {
-    "test": "jscs -c .jscsrc src && eslint -c .eslintrc src && karma start"
+    "compile": "babel -e -d lib/ src/",
+    "prepublish": "npm run compile",
+    "test": "jscs -c .jscsrc src && eslint -c .eslintrc src && karma start",
+    "watch": "npm-watch"
   },
   "main": "./src/index.js",
   "browserify-shim": {
     "external": "global:External"
+  },
+  "watch": {
+    "compile": "src/**/*.js"
   }
 }
