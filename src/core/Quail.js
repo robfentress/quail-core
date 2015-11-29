@@ -2,7 +2,7 @@
  * @providesModule quail
  */
 
-require('babelify/polyfill');
+require('babel-polyfill/dist/polyfill');
 
 const TestCollection = require('TestCollection');
 const wcag2 = require('wcag2');

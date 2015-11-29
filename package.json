@@ -1,6 +1,6 @@
 {
   "name": "@quailjs/quail-core",
-  "description": "Quail, the framework",
+  "description": "Quail, the framework for building accessibility testing packages.",
   "version": "0.0.12",
   "author": "Jesse Beach <jesse.r.beach@gmail.com>",
   "license": "MIT",
@@ -11,52 +11,61 @@
   "bugs": "http://github.com/jessebeach/quail-core/issues",
   "dependencies": {},
   "peerDependencies": {},
-  "optionalDependencies": {},
-  "devDependencies": {
-    "babel": "^5.4.7",
-    "babel-eslint": "^4.1.1",
-    "babel-polyfill": "^6.2.0",
-    "babelify": "^6.3.0",
-    "brfs": "^1.4.1",
-    "browserify": "^11.0.1",
-    "browserify-shim": "^3.8.11",
-    "chai": "^1.9.2",
-    "chai-as-promised": "^4.1.1",
-    "core-js": "^0.9.13",
-    "eslint": "^1.3.1",
-    "glob": "^6.0.1",
-    "jscs": "jscs-dev/node-jscs#c5adeba",
-    "karma": "^0.12.24",
-    "karma-browserify": "^4.4.0",
-    "karma-chai": "^0.1.0",
-    "karma-chrome-launcher": "^0.1.5",
-    "karma-firefox-launcher": "^0.1.3",
-    "karma-html-reporter": "^0.2.4",
-    "karma-ie-launcher": "^0.1.5",
-    "karma-mocha": "^0.1.9",
-    "karma-opera-launcher": "^0.1.0",
-    "karma-phantomjs-launcher": "^0.1.4",
+  "optionalDependencies": {
+    "karma-chrome-launcher": "^0.2.1",
+    "karma-opera-launcher": "^0.3.0",
     "karma-safari-launcher": "^0.1.1",
-    "karma-sinon": "^1.0.3",
-    "karma-spec-reporter": "0.0.13",
+    "karma-ie-launcher": "^0.2.0"
+  },
+  "devDependencies": {
+    "babel-eslint": "^5.0.0-beta4",
+    "babel-polyfill": "^6.2.0",
+    "babel-preset-stage-2": "^6.1.18",
+    "babelify": "^7.2.0",
+    "browserify": "^11.0.1",
+    "chai": "^3.4.1",
+    "chai-as-promised": "^5.1.0",
+    "core-js": "^0.9.13",
+    "eslint": "^1.10.2",
+    "glob": "^6.0.1",
+    "jscs": "^2.6.0",
+    "karma": "^0.13.15",
+    "karma-browserify": "^4.4.1",
+    "karma-chai": "^0.1.0",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-html-reporter": "^0.2.7",
+    "karma-mocha": "^0.2.1",
+    "karma-phantomjs-launcher": "^0.2.1",
+    "karma-sinon": "^1.0.4",
+    "karma-spec-reporter": "0.0.23",
     "mkdirp": "^0.5.1",
-    "mocha": "^2.2.1",
+    "mocha": "^2.3.4",
     "new-element": "0.0.2",
     "npm-watch": "0.0.1",
-    "should": "^5.0.1",
+    "phantomjs": "^1.9.19",
     "sinon": "^1.10.3"
   },
   "scripts": {
-    "compile": "babel -e -d lib/ src/",
+    "compile": "babel --presets stage-2 -d lib/ src/",
     "prepublish": "npm run compile",
-    "test": "jscs -c .jscsrc src && eslint -c .eslintrc src && karma start",
+    "jscs": "jscs -c .jscsrc src --esnext",
+    "eslint": "eslint -c .eslintrc src",
+    "karma": "karma start",
+    "test": "npm run jscs && npm run eslint && karma start",
     "watch": "npm-watch"
   },
   "main": "./src/index.js",
-  "browserify-shim": {
-    "external": "global:External"
-  },
   "watch": {
-    "compile": "src/**/*.js"
+    "compile": [
+      "src/**/*.js"
+    ],
+    "jscs": [
+      "src/**/*.js",
+      "test/**/*.js"
+    ],
+    "eslint": [
+      "src/**/*.js",
+      "test/**/*.js"
+    ]
   }
 }

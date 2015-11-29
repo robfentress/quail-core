@@ -1,22 +1,21 @@
 // Karma configuration for Quail unit tests
 
+const babelify = require('babelify');
+
 module.exports = function(karma) {
   karma.set({
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
     frameworks: [
+      'browserify',
       'mocha',
       'chai',
-      'sinon',
-      'browserify'
+      'sinon'
     ],
 
     // list of files / patterns to load in the browser
     files: [
-      'src/core/*.js',
-      'test/__mocks__/*.js',
-      // Specs
       'test/core/*Spec.js',
     ],
 
@@ -26,12 +25,12 @@ module.exports = function(karma) {
       'src/core/*.js': [
         'browserify'
       ],
-      'test/__mocks__/*.js': [
+      'src/components/*.js': [
         'browserify'
       ],
-      'test/core/*Spec.js': [
+      'test/**/*.js': [
         'browserify'
-      ],
+      ]
     },
 
     // test results reporter to use
@@ -55,17 +54,14 @@ module.exports = function(karma) {
     // possible values: karma.LOG_DISABLE || karma.LOG_ERROR || karma.LOG_WARN || karma.LOG_INFO || karma.LOG_DEBUG
     logLevel: karma.LOG_INFO,
 
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
-
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
     browsers: [
       // 'Chrome',
       // 'IE',
-      //'Safari',
-      //'Firefox',
-      //'Opera',
+      // 'Safari',
+      'Firefox',
+      // 'Opera',
       'PhantomJS'
     ],
 
@@ -76,17 +72,14 @@ module.exports = function(karma) {
 
     browserify: {
       paths: [
+        'node_modules/',
         'src/core/',
         'test/__mocks__/'
       ],
       debug: true,
-      transform: [
-        'brfs',
-        'browserify-shim'
-      ],
       configure: function(bundle) {
         bundle.once('prebundle', function() {
-          bundle.transform('babelify');
+          bundle.transform(babelify);
         });
       }
     },
