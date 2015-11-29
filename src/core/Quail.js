@@ -59,9 +59,9 @@ var quail = {
           let mod = _Assessments.get(name);
           if (mod) {
             quail.tests.set(name, {
-              type: 'custom',
               scope: options.html || null,
-              callback: mod
+              callback: mod.run,
+              ...mod.meta
             });
           }
         }
@@ -74,9 +74,9 @@ var quail = {
             let mod = _Assessments.get(name);
             if (mod) {
               quail.tests.set(name, {
-                type: 'custom',
                 scope: options.html || null,
-                callback: mod
+                callback: mod.run,
+                ...mod.meta
               });
             }
           }
