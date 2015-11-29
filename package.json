@@ -1,7 +1,7 @@
 {
   "name": "@quailjs/quail-core",
   "description": "Quail, the framework",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "author": "Jesse Beach <jesse.r.beach@gmail.com>",
   "license": "MIT",
   "repository": {
