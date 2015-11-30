@@ -139,9 +139,6 @@ var LanguageComponent = {
    */
   getDocumentLanguage: function (scope, returnIso) {
     var language = navigator.language || navigator.userLanguage;
-    if (typeof quail.options.language !== 'undefined') {
-      language = quail.options.language;
-    }
     if (scope.parents('[lang]').length) {
       language = scope.parents('[lang]:first').attr('lang');
     }
