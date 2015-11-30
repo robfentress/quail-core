@@ -6,6 +6,8 @@
 
 require('babel-polyfill/dist/polyfill');
 
+var globalQuail = window.globalQuail || {};
+
 const TestCollection = require('TestCollection');
 const wcag2 = require('wcag2');
 const _Assessments = require('_Assessments');
@@ -148,4 +150,11 @@ var quail = {
     return false;
   }
 };
-module.exports = window.quail = quail;
+
+globalQuail.run = globalQuail.run || function (...args) {
+  quail.run(...args);
+}
+
+window.globalQuail = globalQuail;
+
+module.exports = quail;

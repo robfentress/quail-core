@@ -10,6 +10,10 @@
   },
   "bugs": "http://github.com/jessebeach/quail-core/issues",
   "dependencies": {
+    "babel-plugin-transform-object-rest-spread": "^6.1.18",
+    "babel-polyfill": "^6.2.0",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-preset-stage-2": "^6.1.18",
     "babelify": "^7.2.0",
     "browserify": "^11.0.1",
     "mkdirp": "^0.5.1"
@@ -18,8 +22,6 @@
   "optionalDependencies": {},
   "devDependencies": {
     "babel-eslint": "^5.0.0-beta4",
-    "babel-polyfill": "^6.2.0",
-    "babel-preset-stage-2": "^6.1.18",
     "chai": "^3.4.1",
     "chai-as-promised": "^5.1.0",
     "eslint": "^1.10.2",
@@ -40,7 +42,7 @@
     "sinon": "^1.10.3"
   },
   "scripts": {
-    "compile": "babel --presets stage-2 -d lib/ src/",
+    "compile": "babel -d lib/ src/",
     "prepublish": "npm run compile",
     "jscs": "jscs -c .jscsrc src --esnext",
     "eslint": "eslint -c .eslintrc src",
