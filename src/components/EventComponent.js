@@ -4,7 +4,7 @@
  */
 const Case = require('Case');
 var HasEventListenerComponent = require('HasEventListenerComponent');
-var $ = require('jquery/dist/jquery');
+var DOM = require('DOM');
 
 var EventComponent = function (test, options) {
   var $scope = test.get('$scope');

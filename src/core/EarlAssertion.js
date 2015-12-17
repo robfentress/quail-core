@@ -1,4 +1,4 @@
-var jQuery = require('jquery/dist/jquery');
+var DOM = require('DOM');
 
 var EarlAssertion = (function () {
   var pageUrl;

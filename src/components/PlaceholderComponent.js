@@ -6,7 +6,7 @@ const Case = require('Case');
 var CleanStringComponent = require('CleanStringComponent');
 var IsUnreadable = require('IsUnreadable');
 var PlaceholdersStringsComponent = require('PlaceholdersStringsComponent');
-var $ = require('jquery/dist/jquery');
+var DOM = require('DOM');
 
 var PlaceholderComponent = function (test, options) {
 

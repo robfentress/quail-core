@@ -1,4 +1,4 @@
-var jQuery = require('jquery/dist/jquery');
+var DOM = require('DOM');
 const wcag2 = require('wcag2');
 
 var Criterion = (function () {

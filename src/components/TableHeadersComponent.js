@@ -1,4 +1,4 @@
-const $ = require('jquery/dist/jquery');
+const DOM = require('DOM');
 
 var TableHeadersComponent = (function () {
   var scopeValues = ['row', 'col', 'rowgroup', 'colgroup'];
@@ -80,7 +80,7 @@ var TableHeadersComponent = (function () {
   }
 
   function scanHeaders (tableMap, x, y, deltaX, deltaY) {
-    var headerList = $();
+    var headerList = [];
     var cell = $(tableMap[y][x]);
     var opaqueHeaders = [];
     var inHeaderBlock;
@@ -130,14 +130,14 @@ var TableHeadersComponent = (function () {
           });
         }
         if (blocked === false) {
-          headerList = headerList.add(currCell);
+          headerList.push(currCell);
         }
 
       }
       else if (currCell.is('td') && inHeaderBlock === true) {
         inHeaderBlock = false;
         opaqueHeaders.push(headersFromCurrBlock);
-        headersFromCurrBlock = $();
+        headersFromCurrBlock = [];
       }
     }
     return headerList;
@@ -149,11 +149,11 @@ var TableHeadersComponent = (function () {
   function getHeadersFromAttr (cell) {
     var table = cell.closest('table');
     var ids = cell.attr('headers').split(/\s/);
-    var headerCells = $();
+    var headerCells = [];
     // For each IDREF select an element with that ID from the table
     // Only th/td cells in the same table can be headers
     $.each(ids, function (i, id) {
-      headerCells = headerCells.add($('th#' + id + ', td#' + id, table));
+      headerCells.push($('th#' + id + ', td#' + id, table));
     });
     return headerCells;
   }
@@ -184,7 +184,7 @@ var TableHeadersComponent = (function () {
 
   function getHeadersFromScope (cell, tableMap) {
     var i;
-    var headerCells = $();
+    var headerCells = [];
     var coords = findCellInTableMap(tableMap, cell);
 
     // Grab the width and height, undefined, invalid or 0 become 1
@@ -192,13 +192,13 @@ var TableHeadersComponent = (function () {
     var width = +cell.attr('colspan') || 1;
 
     for (i = 0; i < width; i++) {
-      headerCells = headerCells.add(
+      headerCells.push(
         scanHeaders(tableMap, coords.x + i, coords.y, 0, -1)
       );
     }
 
     for (i = 0; i < height; i++) {
-      headerCells = headerCells.add(
+      headerCells.push(
         scanHeaders(tableMap, coords.x, coords.y + i, -1, 0)
       );
     }
@@ -207,13 +207,13 @@ var TableHeadersComponent = (function () {
 
   function getHeadersFromGroups (cell, tableMap) {
     var cellCoords = findCellInTableMap(tableMap, cell);
-    var headers = $();
+    var headers = [];
 
     cell.closest('thead, tbody, tfoot')
     .find('th[scope=rowgroup]').each(function () {
       var headerCoords = findCellInTableMap(tableMap, $(this));
       if (headerCoords.x <= cellCoords.x && headerCoords.y <= cellCoords.y) {
-        headers = headers.add(this);
+        headers.push(this);
       }
     });
 
@@ -222,7 +222,7 @@ var TableHeadersComponent = (function () {
   }
 
   $.fn.tableHeaders = function () {
-    var headers = $();
+    var headers = [];
     this.each(function () {
       var $this = $(this);
 
@@ -231,15 +231,13 @@ var TableHeadersComponent = (function () {
       }
 
       if ($this.is('[headers]')) {
-        headers = headers.add(getHeadersFromAttr($this));
+        headers.push(getHeadersFromAttr($this));
 
       }
       else {
         var map = $this.closest('table').getTableMap();
-        headers = headers
-        .add(getHeadersFromScope($this, map))
-        .add(getHeadersFromGroups($this, map));
-
+        headers.push(getHeadersFromScope($this, map));
+        headers.push(getHeadersFromGroups($this, map));
       }
     });
     return headers.not(':empty').not(this);
