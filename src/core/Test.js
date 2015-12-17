@@ -40,12 +40,8 @@ var Test = (function () {
       return this;
     },
     get: function (attr) {
-      // Return the document wrapped in jQuery if scope is not defined.
-      if (attr === '$scope') {
-        var scope = this.attributes.scope;
-        var $scope = $(this.attributes.scope);
-        // @todo, pass in a ref to jQuery to this module.
-        return (this.attributes[attr]) ? this.attributes[attr] : ((scope) ? $scope : $(document));
+      if (typeof this.attributes[attr] === 'undefined') {
+        throw new Error('The property \'' + attr + '\' is not defined on Test.');
       }
       return this.attributes[attr];
     },
