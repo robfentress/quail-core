@@ -6,12 +6,12 @@ var AcronymComponent = function (test) {
     var predefined = {};
 
     // Find defined acronyms within this scope.
-    scope.find('acronym[title], abbr[title]').each(function () {
+    DOM.scry('acronym[title], abbr[title]', scope).each(function () {
       predefined[$(this).text().toUpperCase().trim()] = $(this).attr('title');
     });
 
     // Consider all block-level html elements that contain text.
-    scope.find('p, span, h1, h2, h3, h4, h5').each(function () {
+    DOM.scry('p, span, h1, h2, h3, h4, h5', scope).each(function () {
       var self = this;
       var $el = $(self);
 

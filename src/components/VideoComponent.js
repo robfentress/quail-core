@@ -109,7 +109,7 @@ var VideoComponent = {
       },
 
       hasCaptions: function (element, callback) {
-        var $captions = element.find('track[kind=subtitles], track[kind=captions]');
+        var $captions = DOM.scry('track[kind=subtitles], track[kind=captions]', element);
         if (!$captions.length) {
           callback(element, false);
           return;

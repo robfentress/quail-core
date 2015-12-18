@@ -12,7 +12,7 @@ const IsDataTableComponent = function (table) {
   }
   var numberRows = table.find('tr:has(td)').length;
   // Check for odd cell spanning
-  var spanCells = table.find('td[rowspan], td[colspan]');
+  var spanCells = DOM.scry('td[rowspan], td[colspan]', table);
   var isDataTable = true;
   if (spanCells.length) {
     var spanIndex = {};
