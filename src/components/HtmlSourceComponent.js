@@ -23,7 +23,7 @@ var HtmlSourceComponent = {
     }
     if (typeof parsed.children !== 'undefined') {
       parsed.childCount = 1;
-      $.each(parsed.children, function (index, child) {
+      parsed.children.forEach(function (child, index) {
         callback(child, parsed.childCount, parsed);
         that.traverse(child, callback, parsed.childCount, true);
         if (child.type === 'tag') {
@@ -32,7 +32,7 @@ var HtmlSourceComponent = {
       });
     }
     if ($.isArray(parsed)) {
-      $.each(parsed, function (index, element) {
+      parsed.forEach(function (element, index) {
         that.traverse(element, callback);
       });
     }

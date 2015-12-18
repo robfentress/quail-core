@@ -47,7 +47,7 @@ var wcag2 = (function () {
 
     // Create the accessibiliyTests object, based on the
     // tests in the criteria
-    $.each(criteria, function (i, criterion) {
+    criteria.forEach(function (criterion, i) {
       allTests.push.apply(allTests, criterion.getTests());
     });
 
@@ -56,7 +56,7 @@ var wcag2 = (function () {
 
     // Remove duplicates
     // TODO: Figure out why some tests are created multiple times
-    $.each(allTests, function (i, test) {
+    allTests.forEach(function (test, i) {
       if (knownTests.indexOf(test.title.en) === -1) {
         knownTests.push(test.title.en);
         accessibilityTests.push(test);

@@ -34,7 +34,7 @@ var TextStatisticsComponent = {
     if (!wordCount) {
       return 0;
     }
-    $.each(text.split(' '), function (index, word) {
+    text.split(' ').forEach(function (word, index) {
       count += that.syllableCount(word);
     });
     return count / wordCount;

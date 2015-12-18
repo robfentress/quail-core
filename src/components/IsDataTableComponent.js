@@ -23,7 +23,7 @@ const IsDataTableComponent = function (table) {
       }
       spanIndex[$(this).index()]++;
     });
-    $.each(spanIndex, function (index, count) {
+    spanIndex.forEach(function (count, index) {
       if (count < numberRows) {
         isDataTable = false;
       }
@@ -40,7 +40,7 @@ const IsDataTableComponent = function (table) {
       }
       subTablesIndexes[parentIndex]++;
     });
-    $.each(subTablesIndexes, function (index, count) {
+    subTablesIndexes.forEach(function (count, index) {
       if (count < numberRows) {
         isDataTable = false;
       }

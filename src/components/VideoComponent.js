@@ -17,7 +17,7 @@ var VideoComponent = {
    */
   isVideo: function (element) {
     var isVideo = false;
-    $.each(this.providers, function () {
+    this.providers.forEach(function () {
       if (element.is(this.selector) && this.isVideo(element)) {
         isVideo = true;
       }
@@ -26,14 +26,17 @@ var VideoComponent = {
   },
 
   findVideos: function (element, callback) {
-    $.each(this.providers, function (name, provider) {
-      DOM.scry(this.selector, element).each(function () {
-        var video = $(this);
-        if (provider.isVideo(video)) {
-          provider.hasCaptions(video, callback);
-        }
-      });
-    });
+    for (var name in this.providers) {
+      if (providers.hasOwnProperty(name)) {
+        var provider = providers[name];
+        DOM.scry(this.selector, element).each(function () {
+          var video = $(this);
+          if (provider.isVideo(video)) {
+            provider.hasCaptions(video, callback);
+          }
+        });
+      }
+    }
   },
 
   providers: {

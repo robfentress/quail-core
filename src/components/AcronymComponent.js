@@ -22,7 +22,7 @@ var AcronymComponent = function (test) {
       // If there is more than one word and ??.
       if (words.length > 1 && $el.text().toUpperCase() !== $el.text()) {
         // Check each word.
-        $.each(words, function (index, word) {
+        words.forEach(function (word, index) {
           // Only consider words great than one character.
           if (word.length < 2) {
             return;

@@ -118,7 +118,7 @@ var TableHeadersComponent = (function () {
 
         }
         else {
-          $.each(opaqueHeaders, function (i, opaqueHeader) {
+          opaqueHeaders.forEach(function (opaqueHeader, i) {
             var currSize = +currCell.attr(dir + 'span') || 1;
             var opaqueSize = +$(opaqueHeader.cell).attr(dir + 'span') || 1;
             if (currSize === opaqueSize) {
@@ -152,7 +152,7 @@ var TableHeadersComponent = (function () {
     var headerCells = [];
     // For each IDREF select an element with that ID from the table
     // Only th/td cells in the same table can be headers
-    $.each(ids, function (i, id) {
+    ids.forEach(function (id, i) {
       headerCells.push($('th#' + id + ', td#' + id, table));
     });
     return headerCells;
