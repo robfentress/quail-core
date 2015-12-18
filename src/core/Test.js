@@ -108,6 +108,7 @@ var Test = (function () {
       this.set('startTime', start);
 
       if (callback && typeof callback.call === 'function') {
+        debugger;
         try {
           callback.call(self, self, options);
         }
