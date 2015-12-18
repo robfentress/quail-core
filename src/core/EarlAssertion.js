@@ -1,5 +1,3 @@
-var DOM = require('DOM');
-
 var EarlAssertion = (function () {
   var pageUrl;
   var resultPriorityMap = [

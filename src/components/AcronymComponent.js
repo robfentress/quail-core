@@ -1,4 +1,5 @@
 const Case = require('Case');
+const DOM = require('DOM');
 var AcronymComponent = function (test) {
   test.get('scope').each(function () {
     var scope = $(this);

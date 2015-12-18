@@ -3,6 +3,7 @@
  * contains the main content.
  */
 
+const DOM = require('DOM');
 var ContentComponent = {
 
   /**

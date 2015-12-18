@@ -1,3 +1,4 @@
+const DOM = require('DOM');
 var IsUnreadable = require('IsUnreadable');
 const ContainsReadableTextComponent = function (element, children) {
   element = element.clone();

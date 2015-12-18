@@ -1,4 +1,3 @@
-var DOM = require('DOM');
 const wcag2 = require('wcag2');
 
 var Criterion = (function () {

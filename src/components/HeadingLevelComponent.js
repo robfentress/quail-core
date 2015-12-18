@@ -1,4 +1,5 @@
 const Case = require('Case');
+const DOM = require('DOM');
 var HeadingLevelComponent = function (test, options) {
   var priorLevel = false;
   DOM.scry(':header', test.get('scope')).each(function () {

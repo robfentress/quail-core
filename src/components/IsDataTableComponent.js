@@ -1,6 +1,7 @@
 /**
  * Read more about this function here: https://github.com/quailjs/quail/wiki/Layout-versus-data-tables
  */
+const DOM = require('DOM');
 const IsDataTableComponent = function (table) {
   // If there are less than three rows, why do a table?
   if (DOM.scry('tr', table).length < 3) {

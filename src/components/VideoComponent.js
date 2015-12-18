@@ -2,6 +2,7 @@
  * Helper object that tests videos.
  * @todo - allow this to be exteded more easily.
  */
+const DOM = require('DOM');
 var Language = require('LanguageComponent');
 
 var VideoComponent = {
