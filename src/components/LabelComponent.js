@@ -5,10 +5,10 @@ var LabelComponent = function (test, options) {
 
   options = options || {};
 
-  var $scope = test.get('$scope');
-  $scope.each(function () {
+  var scope = test.get('scope');
+  scope.each(function () {
     var $local = $(this);
-    $local.find(options.selector).each(function () {
+    DOM.scry(options.selector, $local).each(function () {
       if ((!$(this).parent('label').length ||
         !$local.find('label[for=' + $(this).attr('id') + ']').length ||
           !ContainsReadableTextComponent($(this).parent('label'))) &&

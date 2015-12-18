@@ -21,21 +21,21 @@ var ContentComponent = {
     if ($element.is('[role=main]')) {
       return $element;
     }
-    if ($element.find('[role=main]').length) {
-      return $element.find('[role=main]').first();
+    if (DOM.scry('[role=main]', $element).length) {
+      return DOM.scry('[role=main]', $element).first();
     }
 
     // If there are no paragraphs in the subject at all, we return the subject.
-    if ($element.find('p').length === 0) {
+    if (DOM.scry('p', $element).length === 0) {
       return $element;
     }
-    $element.find('p').each(function () {
+    DOM.scry('p', $element).each(function () {
       var $parent = $(this).parent();
       var element = $parent.get(0);
       var contentScore = $parent.data('content-score') || 0;
       if (!$parent.data('content-score')) {
 
-        contentScore = $parent.find('p').length;
+        contentScore = DOM.scry('p', $parent).length;
 
         if (element.className.match(/(comment|meta|footer|footnote)/)) {
           contentScore -= 50;

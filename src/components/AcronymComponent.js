@@ -1,17 +1,17 @@
 const Case = require('Case');
 var AcronymComponent = function (test) {
-  test.get('$scope').each(function () {
-    var $scope = $(this);
+  test.get('scope').each(function () {
+    var scope = $(this);
     var alreadyReported = {};
     var predefined = {};
 
     // Find defined acronyms within this scope.
-    $scope.find('acronym[title], abbr[title]').each(function () {
+    scope.find('acronym[title], abbr[title]').each(function () {
       predefined[$(this).text().toUpperCase().trim()] = $(this).attr('title');
     });
 
     // Consider all block-level html elements that contain text.
-    $scope.find('p, span, h1, h2, h3, h4, h5').each(function () {
+    scope.find('p, span, h1, h2, h3, h4, h5').each(function () {
       var self = this;
       var $el = $(self);
 

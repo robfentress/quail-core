@@ -26,7 +26,7 @@ var VideoComponent = {
 
   findVideos: function (element, callback) {
     $.each(this.providers, function (name, provider) {
-      element.find(this.selector).each(function () {
+      DOM.scry(this.selector, element).each(function () {
         var video = $(this);
         if (provider.isVideo(video)) {
           provider.hasCaptions(video, callback);
@@ -76,10 +76,10 @@ var VideoComponent = {
 
       isVideo: function (element) {
         var isVideo = false;
-        if (element.find('param').length === 0) {
+        if (DOM.scry('param', element).length === 0) {
           return false;
         }
-        element.find('param[name=flashvars]').each(function () {
+        DOM.scry('param[name=flashvars]', element).each(function () {
           if ($(this).attr('value').search(/\.(flv|mp4)/i) > -1) {
             isVideo = true;
           }
@@ -89,7 +89,7 @@ var VideoComponent = {
 
       hasCaptions: function (element, callback) {
         var hasCaptions = false;
-        element.find('param[name=flashvars]').each(function () {
+        DOM.scry('param[name=flashvars]', element).each(function () {
           if (($(this).attr('value').search('captions') > -1 &&
              $(this).attr('value').search('.srt') > -1) ||
              $(this).attr('value').search('captions.pluginmode') > -1) {

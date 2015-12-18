@@ -7,12 +7,12 @@ var HasEventListenerComponent = require('HasEventListenerComponent');
 var DOM = require('DOM');
 
 var EventComponent = function (test, options) {
-  var $scope = test.get('$scope');
-  var $items = options.selector && $scope.find(options.selector);
+  var scope = test.get('scope');
+  var $items = options.selector && DOM.scry(options.selector, scope);
   // Bail if nothing was found.
   if ($items.length === 0) {
     test.add(Case({
-      element: $scope.get(),
+      element: scope,
       status: 'inapplicable'
     }));
     return;
@@ -24,6 +24,7 @@ var EventComponent = function (test, options) {
     var hasOnListener = HasEventListenerComponent($(this), eventName);
     // Determine if the element has jQuery listeners for the event.
     var jqevents;
+    var $ = window.jQuery || window.$;
     if ($._data) {
       jqevents = $._data(this, 'events');
     }

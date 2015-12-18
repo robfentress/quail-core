@@ -17,7 +17,7 @@ var PlaceholderComponent = function (test, options) {
     }));
   };
 
-  test.get('$scope').find(options.selector).each(function () {
+  test.get('scope').find(options.selector).each(function () {
     var text = '';
     if ($(this).css('display') === 'none' && !$(this).is('title')) {
       resolve(this, 'inapplicable');

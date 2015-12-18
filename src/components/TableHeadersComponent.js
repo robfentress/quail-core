@@ -5,7 +5,7 @@ var TableHeadersComponent = (function () {
 
   $.fn.getTableMap = function () {
     var map = [];
-    this.find('tr').each(function (y) {
+    DOM.scry('tr', this).each(function (y) {
       if (typeof map[y] === 'undefined') {
         map[y] = [];
       }
