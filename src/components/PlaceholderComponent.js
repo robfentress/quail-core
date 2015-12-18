@@ -17,7 +17,7 @@ var PlaceholderComponent = function (test, options) {
     }));
   };
 
-  test.get('scope').find(options.selector).each(function () {
+  DOM.scry(options.selector, test.get('scope')).each(function () {
     var text = '';
     if ($(this).css('display') === 'none' && !$(this).is('title')) {
       resolve(this, 'inapplicable');
@@ -44,7 +44,7 @@ var PlaceholderComponent = function (test, options) {
       !options.attribute ||
       options.content) {
       text += $(this).text();
-      $(this).find('img[alt]').each(function () {
+      DOM.scry('img[alt]', $(this)).each(function () {
         text += $(this).attr('alt');
       });
     }

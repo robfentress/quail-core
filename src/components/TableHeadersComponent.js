@@ -208,9 +208,8 @@ var TableHeadersComponent = (function () {
   function getHeadersFromGroups (cell, tableMap) {
     var cellCoords = findCellInTableMap(tableMap, cell);
     var headers = [];
-
-    cell.closest('thead, tbody, tfoot')
-    .find('th[scope=rowgroup]').each(function () {
+    let tTags = cell.closest('thead, tbody, tfoot');
+    DOM.scry('th[scope=rowgroup]', tTags).each(function () {
       var headerCoords = findCellInTableMap(tableMap, $(this));
       if (headerCoords.x <= cellCoords.x && headerCoords.y <= cellCoords.y) {
         headers.push(this);

@@ -10,7 +10,7 @@ const IsDataTableComponent = function (table) {
   if (DOM.scry('th[scope]', table).length) {
     return true;
   }
-  var numberRows = table.find('tr:has(td)').length;
+  var numberRows = DOM.scry('tr:has(td)', table).length;
   // Check for odd cell spanning
   var spanCells = DOM.scry('td[rowspan], td[colspan]', table);
   var isDataTable = true;

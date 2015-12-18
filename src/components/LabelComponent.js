@@ -9,10 +9,15 @@ var LabelComponent = function (test, options) {
   scope.each(function () {
     var $local = $(this);
     DOM.scry(options.selector, $local).each(function () {
-      if ((!$(this).parent('label').length ||
-        !$local.find('label[for=' + $(this).attr('id') + ']').length ||
-          !ContainsReadableTextComponent($(this).parent('label'))) &&
-          (!ContainsReadableTextComponent($local.find('label[for=' + $(this).attr('id') + ']')))) {
+      let label = DOM.scry('label[for=' + $(this).attr('id') + ']', $local);
+      let parent = $(this).parent('label');
+      if (
+        (
+          !parent.length ||
+          !label.length
+        ) &&
+        !ContainsReadableTextComponent(label)
+      ) {
         test.add(Case({
           element: this,
           status: 'failed'
