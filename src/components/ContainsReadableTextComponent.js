@@ -10,7 +10,7 @@ const ContainsReadableTextComponent = function (element, children) {
   }
   if (children) {
     var readable = false;
-    element.find('*').each(function () {
+    DOM.scry('*', element).each(function () {
       if (ContainsReadableTextComponent($(this), true)) {
         readable = true;
       }
