@@ -40,9 +40,6 @@ var Test = (function () {
       return this;
     },
     get: function (attr) {
-      if (typeof this.attributes[attr] === 'undefined') {
-        throw new Error('The property \'' + attr + '\' is not defined on Test.');
-      }
       return this.attributes[attr];
     },
     set: function (attr, value) {
