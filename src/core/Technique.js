@@ -24,16 +24,6 @@ var Technique = (function () {
     length: 0,
     // Details of the test.
     attributes: {},
-    // Execute a callback for every element in the matched set.
-    each: function (iterator) {
-      var args = [].slice.call(arguments, 1);
-      for (var i = 0, len = this.length; i < len; ++i) {
-        args.unshift(this[i]);
-        args.unshift(i);
-        iterator.apply(this[i], args);
-      }
-      return this;
-    },
     get: function (attr) {
       return this.attributes[attr];
     },
@@ -79,6 +69,7 @@ var Technique = (function () {
         });
       }
     },
+    forEach: [].forEach,
     push: [].push,
     sort: [].sort,
     splice: [].splice

@@ -33,6 +33,7 @@ function runBrowserify (config) {
         process.exit(1);
       }
       ['dist/runInBrowser.js', 'dist/bundle.js'].forEach(function (filename) {
+        console.log('Building %s', filename);
         let files = [
           path.join(__dirname, 'core/Quail.js')
         ];

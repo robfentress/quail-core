@@ -539,7 +539,7 @@ var ColorComponent = (function () {
     for (var selector in groupsBySelector) {
       if (groupsBySelector.hasOwnProperty(selector)) {
         var cases = groupsBySelector[selector];
-        cases.each(function (index, _case) {
+        cases.forEach(function (_case) {
           if (_case.get('status') === passed) {
             // This can just be an empty string. We only need the passed hash
             // to contain keys, not values.

@@ -68,16 +68,6 @@ var WCAGGuideline = (function () {
     },
     // Setting a length property makes it behave like an array.
     length: 0,
-    // Execute a callback for every element in the matched set.
-    each: function (iterator) {
-      var args = [].slice.call(arguments, 1);
-      for (var i = 0, len = this.length; i < len; ++i) {
-        args.unshift(this[i]);
-        args.unshift(i);
-        iterator.apply(this[i], args);
-      }
-      return this;
-    },
     find: function (testname) {
       for (var i = 0, il = this.length; i < il; ++i) {
         if (this[i].get('name') === testname) {
@@ -112,6 +102,7 @@ var WCAGGuideline = (function () {
       /* return evaluation results */
       /* Filter by SC? */
     },
+    forEach: [].forEach,
     push: [].push,
     sort: [].sort,
     splice: [].splice

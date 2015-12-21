@@ -2,8 +2,8 @@ const Case = require('Case');
 const DOM = require('DOM');
 var HeadingLevelComponent = function (test, options) {
   var priorLevel = false;
-  DOM.scry(':header', test.get('scope')).each(function () {
-    var level = parseInt($(this).get(0).tagName.substr(-1, 1), 10);
+  DOM.scry(':header', test.get('scope')).forEach(function (element) {
+    var level = parseInt(element.tagName.substr(-1, 1), 10);
     if (priorLevel === options.headingLevel && level > priorLevel + 1) {
       test.add(Case({
         element: this,
@@ -12,7 +12,7 @@ var HeadingLevelComponent = function (test, options) {
     }
     else {
       test.add(Case({
-        element: this,
+        element: element,
         status: 'passed'
       }));
     }

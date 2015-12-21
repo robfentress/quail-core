@@ -56,22 +56,6 @@ var SuccessCriteria = (function () {
       return this;
     },
     /**
-     * Execute a callback for every element in the matched set.
-     */
-    each: function (iterator) {
-      var args = [].slice.call(arguments, 1);
-      for (var i = 0, len = this.length; i < len; ++i) {
-        args.unshift(this[i]);
-        args.unshift(i);
-        var cont = iterator.apply(this[i], args);
-        // Allow an iterator to break from the loop.
-        if (cont === false) {
-          break;
-        }
-      }
-      return this;
-    },
-    /**
      * Add a Case to the Success Criteria instance, keyed by selector.
      */
     add: function (_case) {
@@ -120,7 +104,7 @@ var SuccessCriteria = (function () {
         throw new Error('Success Criteria instances require a name in order to have tests filtered.');
       }
       var identifier = name.split(':')[1];
-      tests.each(function (index, test) {
+      tests.forEach(function (test) {
         var guidelineCoverage = test.getGuidelineCoverage('wcag');
         // Get tests for this success criteria.
         for (var criteriaID in guidelineCoverage) {
@@ -169,8 +153,8 @@ var SuccessCriteria = (function () {
           this.set('status', 'noTestCoverage');
         }
         else {
-          associatedTests.each(function (index, test) {
-            test.each(function (index, _case) {
+          associatedTests.forEach(function (test) {
+            test.forEach(function (_case) {
               self.addConclusion(_case.get('status'), _case);
             });
           });
@@ -215,6 +199,7 @@ var SuccessCriteria = (function () {
         });
       }
     },
+    forEach: [].forEach,
     push: [].push,
     sort: [].sort,
     splice: [].splice

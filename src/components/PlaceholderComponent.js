@@ -17,35 +17,35 @@ var PlaceholderComponent = function (test, options) {
     }));
   };
 
-  DOM.scry(options.selector, test.get('scope')).each(function () {
+  DOM.scry(options.selector, test.get('scope')).forEach(function (element) {
     var text = '';
-    if ($(this).css('display') === 'none' && !$(this).is('title')) {
-      resolve(this, 'inapplicable');
+    if (element.style.display === 'none' && !$(element).is('title')) {
+      resolve(element, 'inapplicable');
       return;
     }
     if (typeof options.attribute !== 'undefined') {
-      if ((typeof $(this).attr(options.attribute) === 'undefined' ||
+      if ((typeof $(element).attr(options.attribute) === 'undefined' ||
             (options.attribute === 'tabindex' &&
-              $(this).attr(options.attribute) <= 0
+              $(element).attr(options.attribute) <= 0
             )
          ) &&
          !options.content
         ) {
-        resolve(this, 'failed');
+        resolve(element, 'failed');
         return;
       }
       else {
-        if ($(this).attr(options.attribute) && $(this).attr(options.attribute) !== 'undefined') {
-          text += $(this).attr(options.attribute);
+        if ($(element).attr(options.attribute) && $(element).attr(options.attribute) !== 'undefined') {
+          text += $(element).attr(options.attribute);
         }
       }
     }
     if (typeof options.attribute === 'undefined' ||
       !options.attribute ||
       options.content) {
-      text += $(this).text();
-      DOM.scry('img[alt]', $(this)).each(function () {
-        text += $(this).attr('alt');
+      text += $(element).text();
+      DOM.scry('img[alt]', $(element)).each(function () {
+        text += $(element).attr('alt');
       });
     }
     if (typeof text === 'string' && text.length > 0) {
@@ -53,22 +53,22 @@ var PlaceholderComponent = function (test, options) {
       var regex = /^([0-9]*)(k|kb|mb|k bytes|k byte)$/g;
       var regexResults = regex.exec(text.toLowerCase());
       if (regexResults && regexResults[0].length) {
-        resolve(this, 'failed');
+        resolve(element, 'failed');
       }
       else if (options.empty && IsUnreadable(text)) {
-        resolve(this, 'failed');
+        resolve(element, 'failed');
       }
       else if (PlaceholdersStringsComponent.indexOf(text) > -1) {
-        resolve(this, 'failed');
+        resolve(element, 'failed');
       }
       // It passes.
       else {
-        resolve(this, 'passed');
+        resolve(element, 'passed');
       }
     }
     else {
       if (options.empty && typeof text !== 'number') {
-        resolve(this, 'failed');
+        resolve(element, 'failed');
       }
     }
   });

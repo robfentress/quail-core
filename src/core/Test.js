@@ -29,16 +29,6 @@ var Test = (function () {
     length: 0,
     // Details of the test.
     attributes: null,
-    // Execute a callback for every element in the matched set.
-    each: function (iterator) {
-      var args = [].slice.call(arguments, 1);
-      for (var i = 0, len = this.length; i < len; ++i) {
-        args.unshift(this[i]);
-        args.unshift(i);
-        iterator.apply(this[i], args);
-      }
-      return this;
-    },
     get: function (attr) {
       return this.attributes[attr];
     },
@@ -145,7 +135,7 @@ var Test = (function () {
       for (var i = 0, il = statuses.length; i < il; ++i) {
         var status = statuses[i];
         // Loop through the cases.
-        this.each(function (index, _case) {
+        this.forEach(function (_case) {
           var caseStatus = _case.get('status');
           if (caseStatus === status) {
             test.add(_case);
@@ -197,7 +187,7 @@ var Test = (function () {
     groupCasesBySelector: function () {
       var casesBySelector = {};
       // Loop through the cases.
-      this.each(function (index, _case) {
+      this.forEach(function (_case) {
         var selector = _case.get('selector');
         if (!casesBySelector[selector]) {
           casesBySelector[selector] = new Test();
@@ -217,7 +207,7 @@ var Test = (function () {
     groupCasesByHtml: function () {
       var casesByHtml = {};
       // Loop through the cases.
-      this.each(function (index, _case) {
+      this.forEach(function (_case) {
         var html = _case.get('html');
         if (!casesByHtml[html]) {
           casesByHtml[html] = new Test();
@@ -305,9 +295,10 @@ var Test = (function () {
         });
       }
     },
+    concat: [].concat,
+    forEach: [].forEach,
     push: [].push,
     sort: [].sort,
-    concat: [].concat,
     splice: [].splice
   };
 
@@ -321,7 +312,7 @@ var Test = (function () {
     complete = (typeof complete === 'undefined') ? true : complete;
     // @todo, this iteration would be faster with _.findWhere, that breaks on
     // the first match.
-    this.each(function (index, _case) {
+    this.forEach(function (_case) {
       if (!_case.get('status')) {
         complete = false;
       }
