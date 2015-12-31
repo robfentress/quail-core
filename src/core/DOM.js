@@ -132,17 +132,33 @@ let DOM = {
     if (!isDom(element)) {
       _isDomError('is');
     }
+    var elementNodeName = element.nodeName.toLowerCase();
     var names;
     if (typeof nodeName === 'string') {
       names = nodeName.split(/, ?/);
     }
     else {
+      // Assume it is an Array. Promptly shoot self in foot.
       names = nodeName;
     }
-    var elementNodeName = element.nodeName.toLowerCase();
-    return names.some((name) => {
-      return name.toLowerCase() === elementNodeName;
+    names = names.map((name) => name.toLowerCase());
+    var expandedNames = [];
+    // Expand colon-prefixed selectors to sets of selectors.
+    names.forEach((name) => {
+      switch(name) {
+      case ':input':
+        expandedNames = expandedNames.concat([
+          'input',
+          'button',
+          'select',
+          'textarea'
+        ]);
+        break;
+      default:
+        expandedNames.push(name);
+      }
     });
+    return expandedNames.indexOf(elementNodeName) > -1;
   }
 };
 
