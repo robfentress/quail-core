@@ -19,7 +19,7 @@ var PlaceholderComponent = function (test, options) {
 
   DOM.scry(options.selector, test.get('scope')).forEach(function (element) {
     var text = '';
-    if (element.style.display === 'none' && !$(element).is('title')) {
+    if (element.style.display === 'none' && !DOM.is(element, 'title')) {
       resolve(element, 'inapplicable');
       return;
     }

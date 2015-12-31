@@ -14,7 +14,7 @@ function isColumnHeader (tableMap, cell, x, y) {
 
   for (var i = 0; i < height * tableMap[y].length - 1; i += 1) {
     var currCell = $(tableMap[y + i % height][~~(i / height)]);
-    if (currCell.is('td')) {
+    if (DOM.is(currCell, 'td')) {
       return false;
     }
   }
@@ -35,7 +35,7 @@ function isRowHeader (tableMap, cell, x, y) {
 
   for (var i = 0; i < width * tableMap.length - 1; i += 1) {
     var currCell = $(tableMap[~~(i / width)][x + i % width]);
-    if (currCell.is('td')) {
+    if (DOM.is(currCell, 'td')) {
       return false;
     }
   }
@@ -49,7 +49,7 @@ function scanHeaders (tableMap, x, y, deltaX, deltaY) {
   var inHeaderBlock;
   var headersFromCurrBlock;
 
-  if (cell.is('th')) {
+  if (DOM.is(cell, 'th')) {
     headersFromCurrBlock = [{
       cell: cell,
       x: x,
@@ -67,7 +67,7 @@ function scanHeaders (tableMap, x, y, deltaX, deltaY) {
     var currCell = $(tableMap[y][x]);
     var dir = (deltaX === 0 ? 'col' : 'row');
 
-    if (currCell.is('th')) {
+    if (DOM.is(currCell, 'th')) {
       inHeaderBlock = true;
       headersFromCurrBlock.push({
         cell: currCell,
@@ -97,7 +97,7 @@ function scanHeaders (tableMap, x, y, deltaX, deltaY) {
       }
 
     }
-    else if (currCell.is('td') && inHeaderBlock === true) {
+    else if (DOM.is(currCell, 'td') && inHeaderBlock === true) {
       inHeaderBlock = false;
       opaqueHeaders.push(headersFromCurrBlock);
       headersFromCurrBlock = [];

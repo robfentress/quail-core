@@ -9,19 +9,21 @@ var VideoComponent = {
 
   /**
    * Iterates over listed video providers and runs their `isVideo` method.
-   * @param Element $element
-   *   An element in a jQuery wrapper.
+   * @param Element element
    *
    * @return Boolean
    *   Whether the element is a video.
    */
   isVideo: function (element) {
     var isVideo = false;
-    this.providers.forEach(function () {
-      if (element.is(this.selector) && this.isVideo(element)) {
-        isVideo = true;
+    for (var name in this.providers) {
+      if (this.providers.hasOwnProperty(name)) {
+        var provider = this.providers[name];
+        if (DOM.is(element, provider.selector) && provider.isVideo(element)) {
+          isVideo = true;
+        }
       }
-    });
+    }
     return isVideo;
   },
 
@@ -29,7 +31,7 @@ var VideoComponent = {
     for (var name in this.providers) {
       if (this.providers.hasOwnProperty(name)) {
         var provider = this.providers[name];
-        DOM.scry(this.selector, element).forEach(function (video) {
+        DOM.scry(provider.selector, element).forEach(function (video) {
           if (provider.isVideo(video)) {
             provider.hasCaptions(video, callback);
           }
@@ -51,7 +53,7 @@ var VideoComponent = {
       },
 
       getVideoId: function (element) {
-        var attribute = (element.is('iframe')) ? 'src' : 'href';
+        var attribute = (DOM.is(element, 'iframe')) ? 'src' : 'href';
         var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
         var match = element.attr(attribute).match(regExp);
         if (match && match[7].length === 11) {
@@ -113,7 +115,7 @@ var VideoComponent = {
       selector: 'video',
 
       isVideo: function (element) {
-        return element.is('video');
+        return DOM.is(element, 'video');
       },
 
       hasCaptions: function (element, callback) {
