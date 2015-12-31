@@ -59,6 +59,30 @@ let DOM = {
       throw new Error(error);
     }
     return value;
+  },
+  next: (element) => {
+    var parentNode = element.parentNode;
+    var childNodes;
+    var index;
+    if (parentNode) {
+      childNodes = parentNode.childNodes;
+      index = Array.prototype.indexOf.call(childNodes, element);
+    }
+    if (index > -1 && index < (childNodes.length - 2)) {
+      return childNodes[index + 1];
+    }
+  },
+  prev: (element) => {
+    var parentNode = element.parentNode;
+    var childNodes;
+    var index;
+    if (parentNode) {
+      childNodes = parentNode.childNodes;
+      index = Array.prototype.indexOf.call(childNodes, element);
+    }
+    if (index > 0) {
+      return childNodes[index - 1];
+    }
   }
 };
 
