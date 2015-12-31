@@ -19,9 +19,9 @@ var EventComponent = function (test, options) {
   }
   var searchEvent = options.searchEvent || '';
   var correspondingEvent = options.correspondingEvent || '';
-  $items.each(function () {
+  $items.forEach(function (item) {
     var eventName = searchEvent.replace('on', '');
-    var hasOnListener = HasEventListenerComponent($(this), eventName);
+    var hasOnListener = HasEventListenerComponent(item, eventName);
     // Determine if the element has jQuery listeners for the event.
     var jqevents;
     var $ = window.jQuery || window.$;
@@ -30,9 +30,9 @@ var EventComponent = function (test, options) {
     }
     var hasjQueryOnListener = jqevents && jqevents[eventName] && !!jqevents[eventName].length;
     var hasCorrespondingEvent = !!correspondingEvent.length;
-    var hasSpecificCorrespondingEvent = HasEventListenerComponent($(this), correspondingEvent.replace('on', ''));
+    var hasSpecificCorrespondingEvent = HasEventListenerComponent(item, correspondingEvent.replace('on', ''));
     var _case = test.add(Case({
-      element: this
+      element: item
     }));
     if ((hasOnListener || hasjQueryOnListener) && (!hasCorrespondingEvent || !hasSpecificCorrespondingEvent)) {
       _case.set({

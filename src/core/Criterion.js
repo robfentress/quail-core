@@ -7,7 +7,7 @@ var Criterion = (function () {
     var getResultPriority = wcag2.EarlAssertion.getResultPriority;
     var outcome = {result: defaultResult};
 
-    jQuery.each(parts, function (i, part) {
+    parts.forEach(function (part) {
       if (getResultPriority(outcome) < getResultPriority(part)) {
         outcome.result = part.outcome.result;
       }
@@ -46,7 +46,7 @@ var Criterion = (function () {
       var result;
       var parts = [];
 
-      jQuery.each(testAggregators, function (i, aggregator) {
+      testAggregators.forEach(function (aggregator) {
         var part = aggregator.getResults(data);
         parts.push.apply(parts, part);
       });
@@ -68,7 +68,7 @@ var Criterion = (function () {
      */
     criterion.getTests = function () {
       var tests = [];
-      jQuery.each(testAggregators, function (i, aggregator) {
+      testAggregators.forEach(function (aggregator) {
         tests.push.apply(tests, aggregator.tests);
       });
       return tests;

@@ -44,8 +44,8 @@ var PlaceholderComponent = function (test, options) {
       !options.attribute ||
       options.content) {
       text += $(element).text();
-      DOM.scry('img[alt]', $(element)).each(function () {
-        text += $(element).attr('alt');
+      DOM.scry('img[alt]', $(element)).forEach(function (element) {
+        text += element.getAttribute('alt');
       });
     }
     if (typeof text === 'string' && text.length > 0) {

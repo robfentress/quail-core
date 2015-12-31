@@ -11,19 +11,21 @@ const IsDataTableComponent = function (table) {
   if (DOM.scry('th[scope]', table).length) {
     return true;
   }
+  var index;
   var numberRows = DOM.scry('tr:has(td)', table).length;
   // Check for odd cell spanning
   var spanCells = DOM.scry('td[rowspan], td[colspan]', table);
   var isDataTable = true;
   if (spanCells.length) {
     var spanIndex = {};
-    spanCells.each(function () {
-      if (typeof spanIndex[$(this).index()] === 'undefined') {
-        spanIndex[$(this).index()] = 0;
+    spanCells.forEach(function (cell) {
+      index = DOM.index(cell);
+      if (typeof spanIndex[index] === 'undefined') {
+        spanIndex[index] = 0;
       }
-      spanIndex[$(this).index()]++;
+      spanIndex[index]++;
     });
-    spanIndex.forEach(function (count, index) {
+    spanIndex.forEach(function (count) {
       if (count < numberRows) {
         isDataTable = false;
       }
@@ -33,14 +35,15 @@ const IsDataTableComponent = function (table) {
   var subTables = DOM.scry('table', table);
   if (subTables.length) {
     var subTablesIndexes = {};
-    subTables.each(function () {
-      var parentIndex = $(this).parent('td').index();
+    subTables.forEach(function (table) {
+      var td = DOM.parent(table, 'td')
+      var parentIndex = DOM.index(td);
       if (parentIndex !== false && typeof subTablesIndexes[parentIndex] === 'undefined') {
         subTablesIndexes[parentIndex] = 0;
       }
       subTablesIndexes[parentIndex]++;
     });
-    subTablesIndexes.forEach(function (count, index) {
+    subTablesIndexes.forEach(function (count) {
       if (count < numberRows) {
         isDataTable = false;
       }

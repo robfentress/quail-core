@@ -30,9 +30,9 @@ var TestAggregator = (function () {
    * @param  {Function} callback Given the parameters (test, testcase)
    */
   function eachTestCase (tests, callback) {
-    jQuery.each(tests, function (i, test) {
-      test.each(function () {
-        callback.call(this, test, this);
+    tests.forEach(function (test) {
+      test.forEach(function (_case) {
+        callback.call(_case, test, _case);
       });
     });
   }
@@ -46,21 +46,21 @@ var TestAggregator = (function () {
     var common = [];
     var map = [];
 
-    jQuery.each(tests, function (i, test) {
+    tests.forEach(function (test) {
       var elms = [];
-      test.each(function () {
-        elms.push(this.get('element'));
-        pointerMap.add(this);
+      test.forEach(function (_case) {
+        elms.push(_case.get('element'));
+        pointerMap.add(_case);
       });
       map.push(elms);
     });
-    jQuery.each(map, function (i, arr) {
+    map.forEach(function (arr, i) {
       if (i === 0) {
         common = arr;
         return;
       }
       var newArr = [];
-      jQuery.each(arr, function (i, val) {
+      arr.forEach(function (val) {
         if (common.indexOf(val) !== -1) {
           newArr.push(val);
         }
@@ -97,7 +97,7 @@ var TestAggregator = (function () {
   function createAssertionsForEachElement (elms, base) {
     var assertions = [];
     // Create asserts for each element
-    jQuery.each(elms, function (i, elm) {
+    elms.forEach(function (elm) {
       var assertion = new wcag2.EarlAssertion(base);
       if (elm) { // Don't do undefined pointers
         assertion.outcome.pointer = pointerMap.getPointer(elm);
@@ -222,7 +222,7 @@ var TestAggregator = (function () {
     });
     var testData = [];
 
-    jQuery.each(data, function (i, result) {
+    data.forEach(function (result) {
       if (names.indexOf(result.get('name')) !== -1) {
         testData.push(result);
       }

@@ -3,6 +3,7 @@
  * color contrast/luminosity.
  */
 var ConvertToPx = require('ConvertToPxComponent');
+const DOM = require('DOM');
 var IsUnreadable = require('IsUnreadable');
 
 var ColorComponent = (function () {
@@ -189,7 +190,7 @@ var ColorComponent = (function () {
         return colors.cache[cacheKey];
       }
 
-      element.parents().each(function () {
+      DOM.parents(element).forEach(function () {
         var pcolor = $(this).css('background-color');
         if (colors.hasBackgroundColor(pcolor)) {
           return self.cache[cacheKey] = pcolor;

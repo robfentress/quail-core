@@ -9,7 +9,7 @@ var VideoComponent = {
 
   /**
    * Iterates over listed video providers and runs their `isVideo` method.
-   * @param jQuery $element
+   * @param Element $element
    *   An element in a jQuery wrapper.
    *
    * @return Boolean
@@ -27,10 +27,9 @@ var VideoComponent = {
 
   findVideos: function (element, callback) {
     for (var name in this.providers) {
-      if (providers.hasOwnProperty(name)) {
-        var provider = providers[name];
-        DOM.scry(this.selector, element).each(function () {
-          var video = $(this);
+      if (this.providers.hasOwnProperty(name)) {
+        var provider = this.providers[name];
+        DOM.scry(this.selector, element).forEach(function (video) {
           if (provider.isVideo(video)) {
             provider.hasCaptions(video, callback);
           }
@@ -83,8 +82,8 @@ var VideoComponent = {
         if (DOM.scry('param', element).length === 0) {
           return false;
         }
-        DOM.scry('param[name=flashvars]', element).each(function () {
-          if ($(this).attr('value').search(/\.(flv|mp4)/i) > -1) {
+        DOM.scry('param[name=flashvars]', element).forEach(function (element) {
+          if (element.getAttribute('value').search(/\.(flv|mp4)/i) > -1) {
             isVideo = true;
           }
         });
@@ -93,10 +92,15 @@ var VideoComponent = {
 
       hasCaptions: function (element, callback) {
         var hasCaptions = false;
-        DOM.scry('param[name=flashvars]', element).each(function () {
-          if (($(this).attr('value').search('captions') > -1 &&
-             $(this).attr('value').search('.srt') > -1) ||
-             $(this).attr('value').search('captions.pluginmode') > -1) {
+        DOM.scry('param[name=flashvars]', element).forEach(function (element) {
+          var val = element.getAttribute('value') || '';
+          if (
+            (
+              val.search('captions') > -1 &&
+              val.search('.srt') > -1
+            ) ||
+            val.search('captions.pluginmode') > -1
+          ) {
             hasCaptions = true;
           }
         });
@@ -123,8 +127,9 @@ var VideoComponent = {
           language = element.parents('[lang]').first().attr('lang').split('-')[0];
         }
         var foundLanguage = false;
-        $captions.each(function () {
-          if (!$(this).attr('srclang') || $(this).attr('srclang').toLowerCase() === language) {
+        $captions.forEach(function (caption) {
+          var srclang = caption.getAttribute('srclang');
+          if (!srclang || srclang.toLowerCase() === language) {
             foundLanguage = true;
             try {
               var request = $.ajax({
@@ -138,7 +143,7 @@ var VideoComponent = {
               }
             }
             catch (e) {
-              null;
+              console.warn('VideoComponent: AJAX requests are not allowed');
             }
           }
         });

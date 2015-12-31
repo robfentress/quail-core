@@ -6,22 +6,27 @@ var AcronymComponent = function (test) {
     var predefined = {};
 
     // Find defined acronyms within this scope.
-    DOM.scry('acronym[title], abbr[title]', scope).each(function () {
-      predefined[$(this).text().toUpperCase().trim()] = $(this).attr('title');
+    DOM.scry('acronym[title], abbr[title]', scope).forEach(function (element) {
+      predefined[
+        element.innerText
+          .trim()
+          .replace(/\n/g, '')
+          .replace(/( ){2,}/g, ' ')
+          .toUpperCase()
+      ] = element.getAttribute('title');
     });
 
     // Consider all block-level html elements that contain text.
-    DOM.scry('p, span, h1, h2, h3, h4, h5', scope).each(function () {
-      var self = this;
-      var $el = $(self);
-
-      var words = $el.text().split(' ');
+    DOM.scry('p, span, h1, h2, h3, h4, h5', scope).forEach(function (element) {
+      var self = element;
+      var text = self.innerText;
+      var words = text.split(' ');
       // Keep a list of words that might be acronyms.
       var infractions = [];
       // If there is more than one word and ??.
-      if (words.length > 1 && $el.text().toUpperCase() !== $el.text()) {
+      if (words.length > 1 && text.toUpperCase() !== text) {
         // Check each word.
-        words.forEach(function (word, index) {
+        words.forEach(function (word) {
           // Only consider words great than one character.
           if (word.length < 2) {
             return;
