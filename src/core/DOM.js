@@ -11,8 +11,32 @@ let _isDomError = (methodName) => {
 
 let DOM = {
   scry: (selector, context) => {
-    context = context || document;
-    return select.all(selector, context);
+    var elements = [];
+    if (Array.isArray(context)) {
+      context.forEach((ct) => {
+        if (ct && !isDom(ct)) {
+          _isDomError('scry');
+        }
+        elements = elements.concat(
+          select.all(selector, ct)
+        );
+      });
+    }
+    else {
+      if (context && !isDom(context)) {
+        _isDomError('scry');
+      }
+      elements = elements.concat(
+        select.all(selector, context)
+      );
+    }
+    return elements;
+  },
+  hasAttribute: (element, attrName) => {
+    if (!isDom(element)) {
+      _isDomError('hasAttribute');
+    }
+    return typeof element[attrName] !== 'undefined';
   },
   /**
    * Sets attributes on a node.
