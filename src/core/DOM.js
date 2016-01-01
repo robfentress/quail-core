@@ -43,6 +43,12 @@ let DOM = {
     }
     return parentNodes;
   },
+  children: (element) => {
+    if (!isDom(element)) {
+      _isDomError('children');
+    }
+    return Array.prototype.slice.call(element.children); 
+  },
   hasAttribute: (element, attrName) => {
     if (!isDom(element)) {
       _isDomError('hasAttribute');
