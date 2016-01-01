@@ -405,8 +405,8 @@ var ColorComponent = (function () {
       element[0].scrollIntoView();
 
       // Get relative x and y.
-      var x = element.offset().left - $(window).scrollLeft();
-      var y = element.offset().top - $(window).scrollTop();
+      var x = DOM.offset(element).left - window.scrollX;
+      var y = DOM.offset(element).top - window.scrollY;
 
       // Hide current element.
       scannedElements.push({

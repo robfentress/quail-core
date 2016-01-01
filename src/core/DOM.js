@@ -3,6 +3,7 @@
  */
 
 const DataSet = require('data-set');
+const documentOffset = require('document-offset');
 const isDom = require('is-dom');
 const select = require('dom-select');
 
@@ -205,6 +206,12 @@ let DOM = {
       _isDomError('text');
     }
     return element.textContent || element.innerText;
+  },
+  offset: (element) => {
+    if (!isDom(element)) {
+      _isDomError('offset');
+    }
+    return documentOffset(element);
   }
 };
 

@@ -21,6 +21,7 @@
     "browserify": "^11.0.1",
     "data-set": "^4.0.0",
     "discore-closest": "^0.2.0",
+    "document-offset": "^1.0.4",
     "dom-style": "0.0.3",
     "dom-tree": "0.0.1",
     "dom-value": "0.0.0",
