@@ -2,6 +2,7 @@
  * Wrapper library for DOM operations.
  */
 
+const DataSet = require('data-set');
 const isDom = require('is-dom');
 const select = require('dom-select');
 
@@ -63,7 +64,7 @@ let DOM = {
       var value = attributes[attribute];
 
       if (attribute == 'type') {
-        continue; // The type attribute needs to be set first in IE. See above.
+        continue; // The type attribute needs to be set first in IE.
       }
       else if (attribute == 'style') {
         if (typeof value == 'string') {
@@ -174,6 +175,30 @@ let DOM = {
       }
     });
     return expandedNames.indexOf(elementNodeName) > -1;
+  },
+  setData: (element, key, value) => {
+    if (!isDom(element)) {
+      _isDomError('setData');
+    }
+    var dataKey = 'data-' + key;
+    var attrs = [];
+    attrs[dataKey] = value
+    this.setAttributes(element, attrs);
+    DataSet(element);
+  },
+  getData: (element, key) => {
+    if (!isDom(element)) {
+      _isDomError('getData');
+    }
+    return DataSet(element)[key];
+  },
+  removeData: (element, key) => {
+    if (!isDom(element)) {
+      _isDomError('removeData');
+    }
+    var dataKey = 'data-' + key;
+    element.removeAttribute(dataKey);
+    DataSet(element);
   },
   text: (element) => {
     if (!isDom(element)) {

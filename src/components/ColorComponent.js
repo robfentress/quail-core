@@ -171,10 +171,12 @@ var ColorComponent = (function () {
      */
     getColor: function (element, type) {
       var self = colors;
-      if (!$(element).data('cache-id')) {
-        $(element).data('cache-id', 'id_' + Math.random());
+      var cacheId = DOM.getData(element, 'quail-cache-id');
+      if (!cacheId) {
+        cacheId = 'id_' + Math.random();
+        DOM.setData(element, 'quail-cache-id', cacheId);
       }
-      var cacheKey = 'getColor_' + type + '_' + $(element).data('cache-id');
+      var cacheKey = 'getColor_' + type + '_' + cacheId;
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }
@@ -190,8 +192,8 @@ var ColorComponent = (function () {
         return colors.cache[cacheKey];
       }
 
-      DOM.parents(element).forEach(function () {
-        var pcolor = $(this).css('background-color');
+      DOM.parents(element).forEach(function (element) {
+        var pcolor = DOM.getStyle(element, 'background-color');
         if (colors.hasBackgroundColor(pcolor)) {
           return self.cache[cacheKey] = pcolor;
         }
@@ -237,11 +239,13 @@ var ColorComponent = (function () {
      * Returns background image of an element or its parents.
      */
     getBackgroundImage: function (element) {
-      if (!$(element).data('cache-id')) {
-        $(element).data('cache-id', 'id_' + Math.random());
+      var cacheId = DOM.getData(element, 'quail-cache-id');
+      if (!cacheId) {
+        cacheId = 'id_' + Math.random();
+        DOM.setData(element, 'quail-cache-id', cacheId);
       }
 
-      var cacheKey = 'getBackgroundImage_' + $(element).data('cache-id');
+      var cacheKey = 'getBackgroundImage_' + cacheId;
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }
@@ -262,11 +266,13 @@ var ColorComponent = (function () {
      * Returns background image of an element or its parents.
      */
     getBackgroundGradient: function (element) {
-      if (!$(element).data('cache-id')) {
-        $(element).data('cache-id', 'id_' + Math.random());
+      var cacheId = DOM.getData(element, 'quail-cache-id');
+      if (!cacheId) {
+        cacheId = 'id_' + Math.random();
+        DOM.setData(element, 'quail-cache-id', cacheId);
       }
 
-      var cacheKey = 'getBackgroundGradient_' + $(element).data('cache-id');
+      var cacheKey = 'getBackgroundGradient_' + cacheId;
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }
@@ -377,11 +383,13 @@ var ColorComponent = (function () {
      * Traverse visual tree for background property.
      */
     traverseVisualTreeForBackground: function (element, property) {
-      if (!$(element).data('cache-id')) {
-        $(element).data('cache-id', 'id_' + Math.random());
+      var cacheId = DOM.getData(element, 'quail-cache-id');
+      if (!cacheId) {
+        cacheId = 'id_' + Math.random();
+        DOM.setData(element, 'quail-cache-id', cacheId);
       }
 
-      var cacheKey = 'traverseVisualTreeForBackground_' + $(element).data('cache-id') + '_' + property;
+      var cacheKey = 'traverseVisualTreeForBackground_' + cacheId + '_' + property;
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }

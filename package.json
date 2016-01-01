@@ -19,6 +19,7 @@
     "babel-preset-es2015": "^6.1.18",
     "babelify": "^7.2.0",
     "browserify": "^11.0.1",
+    "data-set": "^4.0.0",
     "discore-closest": "^0.2.0",
     "dom-style": "0.0.3",
     "dom-tree": "0.0.1",
