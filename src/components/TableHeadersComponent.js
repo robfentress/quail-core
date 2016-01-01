@@ -110,7 +110,7 @@ function scanHeaders (tableMap, x, y, deltaX, deltaY) {
  * Get header cells based on the headers getAttributeibute of a cell
  */
 function getHeadersFromAttr (cell) {
-  var table = cell.closest('table');
+  var table = DOM.parents(cell).find((parent) => DOM.is(parent, 'table'))[0];
   var ids = cell.getAttribute('headers').split(/\s/);
   var headerCells = [];
   // For each IDREF select an element with that ID from the table
@@ -171,8 +171,14 @@ function getHeadersFromScope (cell, tableMap) {
 function getHeadersFromGroups (cell, tableMap) {
   var cellCoords = findCellInTableMap(tableMap, cell);
   var headers = [];
-  let tTags = cell.closest('thead, tbody, tfoot');
-  DOM.scry('th[scope=rowgroup]', tTags).forEach(function (element) {
+  let parents = DOM.parents(cell);
+  let thead = parents.find((parent) => DOM.is(parent, 'thead'));
+  let tbody = parents.find((parent) => DOM.is(parent, 'tbody'));
+  let tfoot = parents.find((parent) => DOM.is(parent, 'tfoot'));
+  DOM.scry(
+    'th[scope=rowgroup]',
+    [thead, tbody, tfoot]
+  ).forEach(function (element) {
     var headerCoords = findCellInTableMap(tableMap, element);
     if (headerCoords.x <= cellCoords.x && headerCoords.y <= cellCoords.y) {
       headers.push(element);
@@ -221,7 +227,7 @@ var TableHeadersComponent = {
   tableHeaders: function (elements) {
     var headers = [];
     elements.forEach(function (element) {
-      if (DOM.isNot(element, 'td, th')) {
+      if (!DOM.is(element, 'td, th')) {
         return;
       }
 
