@@ -418,7 +418,6 @@ var ColorComponent = (function () {
       // Get element at position x, y. This only selects visible elements.
       var el = document.elementFromPoint(x, y);
       while (foundIt === undefined && el && el.tagName !== 'BODY' && el.tagName !== 'HTML') {
-        el = $(el);
         var bcolor = el.css('backgroundColor');
         var bimage;
         // Only check visible elements.
@@ -498,7 +497,7 @@ var ColorComponent = (function () {
   function textShouldBeTested (textNode) {
     // We want a tag, not just the text node.
     var element = textNode.parentNode;
-    var $this = $(element);
+    var $this = element;
 
     // The nodeType of the element must be 1. Nodes of type 1 implement the Element
     // interface which is required of the first argument passed to window.getComputedStyle.

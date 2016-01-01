@@ -47,7 +47,7 @@ let DOM = {
     if (!isDom(element)) {
       _isDomError('children');
     }
-    return Array.prototype.slice.call(element.children); 
+    return Array.prototype.slice.call(element.children);
   },
   hasAttribute: (element, attrName) => {
     if (!isDom(element)) {
