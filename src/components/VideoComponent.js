@@ -55,7 +55,7 @@ var VideoComponent = {
       getVideoId: function (element) {
         var attribute = (DOM.is(element, 'iframe')) ? 'src' : 'href';
         var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
-        var match = element.attr(attribute).match(regExp);
+        var match = DOM.getAttribute(element, attribute).match(regExp);
         if (match && match[7].length === 11) {
           return match[7];
         }
@@ -125,8 +125,11 @@ var VideoComponent = {
           return;
         }
         var language = Language.getDocumentLanguage(element, true);
-        if (element.parents('[lang]').length) {
-          language = element.parents('[lang]').first().attr('lang').split('-')[0];
+        var langScope = DOM.parents(element).find((parent) => {
+          return DOM.hasAttribute(parent, 'lang');
+        })[0];
+        if (langScope) {
+          language = DOM.getAttribute(langScope, 'lang').split('-')[0];
         }
         var foundLanguage = false;
         $captions.forEach(function (caption) {
@@ -135,7 +138,7 @@ var VideoComponent = {
             foundLanguage = true;
             try {
               var request = $.ajax({
-                url: $(this).attr('src'),
+                url: DOM.getAttribute(this, 'src'),
                 type: 'HEAD',
                 async: false,
                 error: function () {}

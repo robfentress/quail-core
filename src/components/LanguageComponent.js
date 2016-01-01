@@ -139,11 +139,14 @@ var LanguageComponent = {
    */
   getDocumentLanguage: function (scope, returnIso) {
     var language = navigator.language || navigator.userLanguage;
-    if (scope.parents('[lang]').length) {
-      language = scope.parents('[lang]:first').attr('lang');
+    var langScope = DOM.parents(scope).find((parent) => {
+      return DOM.hasAttribute(parent, 'lang');
+    })[0];
+    if (langScope) {
+      language = DOM.getAttribute(langScope, 'lang');
     }
-    if (typeof scope.attr('lang') !== 'undefined') {
-      language = scope.attr('lang');
+    if (typeof DOM.getAttribute(scope, 'lang') !== 'undefined') {
+      language = DOM.getAttribute(scope, 'lang');
     }
     language = language.toLowerCase().trim();
     if (returnIso) {

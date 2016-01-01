@@ -3,7 +3,8 @@
  */
 const DOM = require('DOM');
 var HasEventListenerComponent = function (element, event) {
-  if (typeof $(element).attr('on' + event) !== 'undefined') {
+  var onEventAttr = DOM.getAttribute(element, 'on' + event);
+  if (typeof onEventAttr !== 'undefined') {
     return true;
   }
   // jQuery events are stored in private objects

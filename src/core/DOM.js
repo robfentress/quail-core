@@ -32,6 +32,15 @@ let DOM = {
     }
     return elements;
   },
+  parents: (element) {
+    let parentNodes = [];
+    let node = element;
+    while (node.parentNode) {
+      parentNodes.push(node.parentNode);
+      node = node.parentNode;
+    }
+    return parentNodes;
+  },
   hasAttribute: (element, attrName) => {
     if (!isDom(element)) {
       _isDomError('hasAttribute');
@@ -71,6 +80,12 @@ let DOM = {
         element.setAttribute(attribute, value);
       }
     }
+  },
+  getAttribute: (element, name) => {
+    if (!isDom(element)) {
+      _isDomError('getAttribute');
+    }
+    return element.getAttribute(name);
   },
   getStyle: (element, name) => {
     if (!isDom(element)) {
@@ -159,6 +174,12 @@ let DOM = {
       }
     });
     return expandedNames.indexOf(elementNodeName) > -1;
+  },
+  text: (element) => {
+    if (!isDom(element)) {
+      _isDomError('text');
+    }
+    return element.textContent || element.innerText;
   }
 };
 

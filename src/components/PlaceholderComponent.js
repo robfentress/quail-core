@@ -24,9 +24,9 @@ var PlaceholderComponent = function (test, options) {
       return;
     }
     if (typeof options.attribute !== 'undefined') {
-      if ((typeof $(element).attr(options.attribute) === 'undefined' ||
+      if ((typeof DOM.getAttribute(element, options.attribute) === 'undefined' ||
             (options.attribute === 'tabindex' &&
-              $(element).attr(options.attribute) <= 0
+              DOM.getAttribute(element, options.attribute) <= 0
             )
          ) &&
          !options.content
@@ -35,8 +35,8 @@ var PlaceholderComponent = function (test, options) {
         return;
       }
       else {
-        if ($(element).attr(options.attribute) && $(element).attr(options.attribute) !== 'undefined') {
-          text += $(element).attr(options.attribute);
+        if (DOM.getAttribute(element, options.attribute) && DOM.getAttribute(element, options.attribute) !== 'undefined') {
+          text += DOM.getAttribute(element, options.attribute);
         }
       }
     }
