@@ -43,7 +43,7 @@ var PlaceholderComponent = function (test, options) {
     if (typeof options.attribute === 'undefined' ||
       !options.attribute ||
       options.content) {
-      text += $(element).text();
+      text += DOM.text(element);
       DOM.scry('img[alt]', $(element)).forEach(function (element) {
         text += element.getAttribute('alt');
       });
