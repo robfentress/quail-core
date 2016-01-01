@@ -32,7 +32,7 @@ let DOM = {
     }
     return elements;
   },
-  parents: (element) {
+  parents: (element) => {
     let parentNodes = [];
     let node = element;
     while (node.parentNode) {
@@ -160,7 +160,7 @@ let DOM = {
     var expandedNames = [];
     // Expand colon-prefixed selectors to sets of selectors.
     names.forEach((name) => {
-      switch(name) {
+      switch (name) {
       case ':input':
         expandedNames = expandedNames.concat([
           'input',

@@ -1,3 +1,4 @@
+const DOM = require('DOM');
 var LanguageComponent = {
 
   /**
