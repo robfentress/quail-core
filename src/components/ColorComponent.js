@@ -193,7 +193,7 @@ var ColorComponent = (function () {
       }
 
       DOM.parents(element).forEach(function (element) {
-        var pcolor = DOM.getStyle(element, 'background-color');
+        var pcolor = DOM.getComputedStyle(element, 'background-color');
         if (colors.hasBackgroundColor(pcolor)) {
           return self.cache[cacheKey] = pcolor;
         }
@@ -251,7 +251,7 @@ var ColorComponent = (function () {
       }
       element = element[0];
       while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
-        var bimage = DOM.getStyle(element, 'background-image');
+        var bimage = DOM.getComputedStyle(element, 'background-image');
         if (bimage && bimage !== 'none' && bimage.search(/^(.*?)url(.*?)$/i) !== -1) {
           colors.cache[cacheKey] = bimage.replace('url(', '').replace(/['"]/g, '').replace(')', '');
           return colors.cache[cacheKey];
@@ -283,11 +283,11 @@ var ColorComponent = (function () {
       element = element[0];
       while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
         // Exit if element has a background color.
-        if (colors.hasBackgroundColor(DOM.getStyle(element, 'background-color'))) {
+        if (colors.hasBackgroundColor(DOM.getComputedStyle(element, 'background-color'))) {
           colors.cache[cacheKey] = false;
           return false;
         }
-        var bimage = DOM.getStyle(element, 'background-image');
+        var bimage = DOM.getComputedStyle(element, 'background-image');
         if (bimage && bimage !== 'none' && bimage.search(/^(.*?)gradient(.*?)$/i) !== -1) {
           var gradient = bimage.match(/gradient(\(.*\))/g);
           if (gradient.length > 0) {
