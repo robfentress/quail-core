@@ -4,10 +4,9 @@ var LabelComponent = function (test, options) {
 
   options = options || {};
 
-  var scope = test.get('scope');
-  scope.forEach(function (local) {
-    DOM.scry(options.selector, local).forEach(function (element) {
-      let label = DOM.scry('label[for=' + element.getAttribute('id') + ']', local);
+  test.get('scope').forEach(function (scope) {
+    DOM.scry(options.selector, scope).forEach(function (element) {
+      let label = DOM.scry('label[for=' + element.getAttribute('id') + ']', scope);
       let parent = DOM.parent(element, 'label');
       if (!parent || !label) {
         test.add(Case({

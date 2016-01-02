@@ -17,60 +17,62 @@ var PlaceholderComponent = function (test, options) {
     }));
   };
 
-  DOM.scry(options.selector, test.get('scope')).forEach(function (element) {
-    var text = '';
-    if (element.style.display === 'none' && !DOM.is(element, 'title')) {
-      resolve(element, 'inapplicable');
-      return;
-    }
-    if (typeof options.attribute !== 'undefined') {
-      if ((typeof DOM.getAttribute(element, options.attribute) === 'undefined' ||
-            (options.attribute === 'tabindex' &&
-              DOM.getAttribute(element, options.attribute) <= 0
-            )
-         ) &&
-         !options.content
-        ) {
-        resolve(element, 'failed');
+  test.get('scope').forEach((scope) => {
+    DOM.scry(options.selector, scope).forEach(function (element) {
+      var text = '';
+      if (element.style.display === 'none' && !DOM.is(element, 'title')) {
+        resolve(element, 'inapplicable');
         return;
       }
-      else {
-        if (DOM.getAttribute(element, options.attribute) && DOM.getAttribute(element, options.attribute) !== 'undefined') {
-          text += DOM.getAttribute(element, options.attribute);
+      if (typeof options.attribute !== 'undefined') {
+        if ((typeof DOM.getAttribute(element, options.attribute) === 'undefined' ||
+              (options.attribute === 'tabindex' &&
+                DOM.getAttribute(element, options.attribute) <= 0
+              )
+           ) &&
+           !options.content
+          ) {
+          resolve(element, 'failed');
+          return;
+        }
+        else {
+          if (DOM.getAttribute(element, options.attribute) && DOM.getAttribute(element, options.attribute) !== 'undefined') {
+            text += DOM.getAttribute(element, options.attribute);
+          }
         }
       }
-    }
-    if (typeof options.attribute === 'undefined' ||
-      !options.attribute ||
-      options.content) {
-      text += DOM.text(element);
-      DOM.scry('img[alt]', element).forEach(function (element) {
-        text += element.getAttribute('alt');
-      });
-    }
-    if (typeof text === 'string' && text.length > 0) {
-      text = CleanStringComponent(text);
-      var regex = /^([0-9]*)(k|kb|mb|k bytes|k byte)$/g;
-      var regexResults = regex.exec(text.toLowerCase());
-      if (regexResults && regexResults[0].length) {
-        resolve(element, 'failed');
+      if (typeof options.attribute === 'undefined' ||
+        !options.attribute ||
+        options.content) {
+        text += DOM.text(element);
+        DOM.scry('img[alt]', element).forEach(function (element) {
+          text += element.getAttribute('alt');
+        });
       }
-      else if (options.empty && IsUnreadable(text)) {
-        resolve(element, 'failed');
+      if (typeof text === 'string' && text.length > 0) {
+        text = CleanStringComponent(text);
+        var regex = /^([0-9]*)(k|kb|mb|k bytes|k byte)$/g;
+        var regexResults = regex.exec(text.toLowerCase());
+        if (regexResults && regexResults[0].length) {
+          resolve(element, 'failed');
+        }
+        else if (options.empty && IsUnreadable(text)) {
+          resolve(element, 'failed');
+        }
+        else if (PlaceholdersStringsComponent.indexOf(text) > -1) {
+          resolve(element, 'failed');
+        }
+        // It passes.
+        else {
+          resolve(element, 'passed');
+        }
       }
-      else if (PlaceholdersStringsComponent.indexOf(text) > -1) {
-        resolve(element, 'failed');
-      }
-      // It passes.
       else {
-        resolve(element, 'passed');
+        if (options.empty && typeof text !== 'number') {
+          resolve(element, 'failed');
+        }
       }
-    }
-    else {
-      if (options.empty && typeof text !== 'number') {
-        resolve(element, 'failed');
-      }
-    }
+    });
   });
 };
 module.exports = PlaceholderComponent;
