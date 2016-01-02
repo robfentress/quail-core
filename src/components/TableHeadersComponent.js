@@ -242,7 +242,7 @@ var TableHeadersComponent = {
         headers.push(getHeadersFromGroups(element, map));
       }
     });
-    return DOM.not(headers, ':empty');
+    return headers.filter((header) => /\S/.test(header.innerHTML));
   }
 };
 

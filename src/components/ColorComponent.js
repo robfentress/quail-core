@@ -511,7 +511,7 @@ var ColorComponent = (function () {
       // Ignore elements whose content isn't displayed to the page.
       return false;
     }
-    else if (IsUnreadable($this.text())) {
+    else if (IsUnreadable(DOM.text($this))) {
       // Bail out if the text is not readable.
       return false;
 
