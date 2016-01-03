@@ -1,9 +1,10 @@
 const Case = require('Case');
 const DOM = require('DOM');
+const HeadingSelectorComponent = require('HeadingSelectorComponent');
 var HeadingLevelComponent = function (test, options) {
   var priorLevel = false;
   test.get('scope').forEach((scope) => {
-    DOM.scry(':header', scope).forEach(function (element) {
+    HeadingSelectorComponent(scope).forEach(function (element) {
       var level = parseInt(element.tagName.substr(-1, 1), 10);
       if (priorLevel === options.headingLevel && level > priorLevel + 1) {
         test.add(Case({

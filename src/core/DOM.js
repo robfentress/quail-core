@@ -129,8 +129,8 @@ let DOM = {
     var children;
     var index;
     if (parentElement) {
-      children = parentElement.children;
-      index = Array.prototype.indexOf.call(children, element);
+      children = DOM.children(parentElement);
+      index = children.indexOf(element);
     }
     if (index > -1 && index <= (children.length - 2)) {
       return children[index + 1];
@@ -144,12 +144,38 @@ let DOM = {
     var children;
     var index;
     if (parentElement) {
-      children = parentElement.children;
-      index = Array.prototype.indexOf.call(children, element);
+      children = DOM.children(parentElement);
+      index = children.indexOf(element);
     }
     if (index > 0) {
       return children[index - 1];
     }
+  },
+  nextAll: (element) => {
+    if (!isDom(element)) {
+      _isDomError('nextAll');
+    }
+    var parentElement = element.parentElement;
+    var children;
+    var index;
+    if (parentElement) {
+      children = DOM.children(parentElement);
+      index = children.indexOf(element);
+    }
+    return children.slice(index + 1);
+  },
+  prevAll: (element) => {
+    if (!isDom(element)) {
+      _isDomError('prevAll');
+    }
+    var parentElement = element.parentElement;
+    var children;
+    var index;
+    if (parentElement) {
+      children = DOM.children(parentElement);
+      index = children.indexOf(element);
+    }
+    return children.slice(0, index);
   },
   is: (element, nodeName) => {
     if (!isDom(element)) {
@@ -190,7 +216,7 @@ let DOM = {
     var dataKey = 'data-' + key;
     var attrs = [];
     attrs[dataKey] = value
-    this.setAttributes(element, attrs);
+    DOM.setAttributes(element, attrs);
     DataSet(element);
   },
   getData: (element, key) => {
@@ -218,6 +244,11 @@ let DOM = {
       _isDomError('offset');
     }
     return documentOffset(element);
+  },
+  isVisible: (element) => {
+    let display = DOM.getComputedStyle(element, 'display');
+    let visibility = DOM.getComputedStyle(element, 'visibility');
+    return !(display === 'none') && !(visibility === 'hidden');
   }
 };
 
