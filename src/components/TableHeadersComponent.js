@@ -13,7 +13,7 @@ function isColumnHeader (tableMap, cell, x, y) {
   }
 
   for (var i = 0; i < height * tableMap[y].length - 1; i += 1) {
-    var currCell = $(tableMap[y + i % height][~~(i / height)]);
+    var currCell = tableMap[y + i % height][~~(i / height)];
     if (DOM.is(currCell, 'td')) {
       return false;
     }
@@ -34,7 +34,7 @@ function isRowHeader (tableMap, cell, x, y) {
   }
 
   for (var i = 0; i < width * tableMap.length - 1; i += 1) {
-    var currCell = $(tableMap[~~(i / width)][x + i % width]);
+    var currCell = tableMap[~~(i / width)][x + i % width];
     if (DOM.is(currCell, 'td')) {
       return false;
     }
@@ -44,7 +44,7 @@ function isRowHeader (tableMap, cell, x, y) {
 
 function scanHeaders (tableMap, x, y, deltaX, deltaY) {
   var headerList = [];
-  var cell = $(tableMap[y][x]);
+  var cell = tableMap[y][x];
   var opaqueHeaders = [];
   var inHeaderBlock;
   var headersFromCurrBlock;
@@ -64,7 +64,7 @@ function scanHeaders (tableMap, x, y, deltaX, deltaY) {
   }
 
   for (; x >= 0 && y >= 0; x += deltaX, y += deltaY) {
-    var currCell = $(tableMap[y][x]);
+    var currCell = tableMap[y][x];
     var dir = (deltaX === 0 ? 'col' : 'row');
 
     if (DOM.is(currCell, 'th')) {
@@ -83,7 +83,7 @@ function scanHeaders (tableMap, x, y, deltaX, deltaY) {
       else {
         opaqueHeaders.forEach(function (opaqueHeader) {
           var currSize = +currCell.getAttribute(dir + 'span') || 1;
-          var opaqueSize = +$(opaqueHeader.cell).getAttribute(dir + 'span') || 1;
+          var opaqueSize = +DOM.getAttribute(opaqueHeader.cell, dir + 'span') || 1;
           if (currSize === opaqueSize) {
             if (deltaY === -1 && opaqueHeader.x === x ||
                 deltaX === -1 && opaqueHeader.y === y) {
@@ -116,7 +116,7 @@ function getHeadersFromAttr (cell) {
   // For each IDREF select an element with that ID from the table
   // Only th/td cells in the same table can be headers
   ids.forEach(function (id) {
-    headerCells.push($('th#' + id + ', td#' + id, table));
+    headerCells.push(DOM.scry('th#' + id + ', td#' + id, table));
   });
   return headerCells;
 }
@@ -189,9 +189,9 @@ function getHeadersFromGroups (cell, tableMap) {
 
 }
 var TableHeadersComponent = {
-  getTableMap: function () {
+  getTableMap: function (table) {
     var map = [];
-    DOM.scry('tr', this).forEach(function (element, y) {
+    DOM.scry('tr', table).forEach(function (element, y) {
       if (typeof map[y] === 'undefined') {
         map[y] = [];
       }
@@ -216,7 +216,7 @@ var TableHeadersComponent = {
             map[y + ~~(i / width)] = [];
           }
           // Add the cell to the correct x / y coordinates
-          map[y + ~~(i / width)][x + (i % width)] = this;
+          map[y + ~~(i / width)][x + (i % width)] = cell;
         }
       });
 
