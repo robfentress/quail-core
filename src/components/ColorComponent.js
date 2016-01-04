@@ -96,13 +96,13 @@ var ColorComponent = (function () {
      * WCAG at a certain contrast ratio.
      */
     passesWCAGColor: function (element, foreground, background, level) {
-      var pxfsize = ConvertToPx(element.css('fontSize'));
+      var pxfsize = ConvertToPx(DOM.getComputedStyle(element, 'font-size'));
       if (typeof level === 'undefined') {
         if (pxfsize >= 18) {
           level = 3;
         }
         else {
-          var fweight = element.css('fontWeight');
+          var fweight = DOM.getComputedStyle(element, 'font-weight');
           if (pxfsize >= 14 && (fweight === 'bold' || parseInt(fweight, 10) >= 700)) {
             level = 3;
           }
@@ -182,11 +182,11 @@ var ColorComponent = (function () {
       }
 
       if (type === 'foreground') {
-        colors.cache[cacheKey] = (element.css('color')) ? element.css('color') : 'rgb(0,0,0)';
+        colors.cache[cacheKey] = (DOM.getComputedStyle(element, 'color')) ? DOM.getComputedStyle(element, 'color') : 'rgb(0,0,0)';
         return colors.cache[cacheKey];
       }
 
-      var bcolor = element.css('background-color');
+      var bcolor = DOM.getComputedStyle(element, 'background-color');
       if (colors.hasBackgroundColor(bcolor)) {
         colors.cache[cacheKey] = bcolor;
         return colors.cache[cacheKey];
@@ -249,7 +249,6 @@ var ColorComponent = (function () {
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }
-      element = element[0];
       while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
         var bimage = DOM.getComputedStyle(element, 'background-image');
         if (bimage && bimage !== 'none' && bimage.search(/^(.*?)url(.*?)$/i) !== -1) {
@@ -280,7 +279,6 @@ var ColorComponent = (function () {
       var notEmpty = function (s) {
         return (typeof s === 'string') && (s.trim() !== '');
       };
-      element = element[0];
       while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
         // Exit if element has a background color.
         if (colors.hasBackgroundColor(DOM.getComputedStyle(element, 'background-color'))) {
@@ -413,14 +411,16 @@ var ColorComponent = (function () {
       // Hide current element.
       scannedElements.push({
         element: element,
-        visibility: element.css('visibility')
+        visibility: DOM.getComputedStyle(element, 'visibility')
       });
-      element.css('visibility', 'hidden');
+      DOM.setAttributes(element, {
+        visibility: 'hidden'
+      });
 
       // Get element at position x, y. This only selects visible elements.
       var el = document.elementFromPoint(x, y);
       while (foundIt === undefined && el && el.tagName !== 'BODY' && el.tagName !== 'HTML') {
-        var bcolor = el.css('backgroundColor');
+        var bcolor = DOM.getComputedStyle(el, 'background-color');
         var bimage;
         // Only check visible elements.
         switch (property) {
@@ -436,7 +436,7 @@ var ColorComponent = (function () {
             continue;
           }
 
-          bimage = el.css('backgroundImage');
+          bimage = DOM.getComputedStyle(el, 'background-image');
           if (bimage && bimage !== 'none' && bimage.search(/^(.*?)gradient(.*?)$/i) !== -1) {
             var gradient = bimage.match(/gradient(\(.*\))/g);
             if (gradient.length > 0) {
@@ -453,7 +453,7 @@ var ColorComponent = (function () {
             foundIt = false;
             continue;
           }
-          bimage = el.css('backgroundImage');
+          bimage = DOM.getComputedStyle(el, 'background-image');
           if (bimage && bimage !== 'none' && bimage.search(/^(.*?)url(.*?)$/i) !== -1) {
             foundIt = bimage.replace('url(', '').replace(/['"]/g, '').replace(')', '');
           }
@@ -461,15 +461,19 @@ var ColorComponent = (function () {
         }
         scannedElements.push({
           element: el,
-          visibility: el.css('visibility')
+          visibility: DOM.getComputedStyle(el, 'visibility')
         });
-        el.css('visibility', 'hidden');
+        DOM.setAttributes(el, {
+          visibility: 'hidden'
+        });
         el = document.elementFromPoint(x, y);
       }
 
       // Reset visibility.
       for (var i = 0; i < scannedElements.length; i++) {
-        scannedElements[i].element.css('visibility', scannedElements[i].visibility);
+        DOM.setAttributes(scannedElements[i].element, {
+          visibility: scannedElements[i].visibility
+        });
       }
 
       colors.cache[cacheKey] = foundIt;
