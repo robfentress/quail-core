@@ -278,7 +278,7 @@ var ColorComponent = (function () {
       }
 
       var notEmpty = function (s) {
-        return $.trim(s) !== '';
+        return (typeof s === 'string') && (s.trim() !== '');
       };
       element = element[0];
       while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
@@ -292,7 +292,9 @@ var ColorComponent = (function () {
           var gradient = bimage.match(/gradient(\(.*\))/g);
           if (gradient.length > 0) {
             gradient = gradient[0].replace(/(linear|radial|\d+deg|from|\bto\b|gradient|top|left|bottom|right|color-stop|center|\d*%)/g, '');
-            colors.cache[cacheKey] = $.grep(gradient.match(/(rgb\([^\)]+\)|#[a-z\d]*|[a-z]*)/g), notEmpty);
+            colors.cache[cacheKey] = gradient
+              .match(/(rgb\([^\)]+\)|#[a-z\d]*|[a-z]*)/g)
+              .filter(notEmpty);
             return colors.cache[cacheKey];
           }
         }
@@ -395,7 +397,7 @@ var ColorComponent = (function () {
       }
 
       var notempty = function (s) {
-        return $.trim(s) !== '';
+        return (typeof s === 'string') && s.trim() !== '';
       };
 
       var foundIt;
@@ -439,7 +441,9 @@ var ColorComponent = (function () {
             var gradient = bimage.match(/gradient(\(.*\))/g);
             if (gradient.length > 0) {
               gradient = gradient[0].replace(/(linear|radial|\d+deg|from|\bto\b|gradient|top|left|bottom|right|color-stop|center|\d*%)/g, '');
-              foundIt = $.grep(gradient.match(/(rgb\([^\)]+\)|#[a-z\d]*|[a-z]*)/g), notempty);
+              foundIt = gradient
+                .match(/(rgb\([^\)]+\)|#[a-z\d]*|[a-z]*)/g)
+                .filter(notempty);
             }
           }
           break;

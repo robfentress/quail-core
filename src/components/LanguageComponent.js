@@ -146,9 +146,8 @@ var LanguageComponent = {
     if (langScope) {
       language = DOM.getAttribute(langScope, 'lang');
     }
-    if (typeof DOM.getAttribute(scope, 'lang') !== 'undefined') {
-      language = DOM.getAttribute(scope, 'lang');
-    }
+    let langAttr = DOM.getAttribute(scope, 'lang');
+    language = langAttr || language || '';
     language = language.toLowerCase().trim();
     if (returnIso) {
       return language.split('-')[0];

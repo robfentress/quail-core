@@ -2,6 +2,7 @@
  * Helper object that tests videos.
  * @todo - allow this to be exteded more easily.
  */
+const AJAX = require('AJAX');
 const DOM = require('DOM');
 var Language = require('LanguageComponent');
 
@@ -64,13 +65,10 @@ var VideoComponent = {
 
       hasCaptions: function (element, callback) {
         var videoId = this.getVideoId(element);
-        $.ajax({
-          url: this.apiUrl.replace('%video', videoId),
-          async: false,
-          dataType: 'json',
-          success: function (data) {
-            callback(element, (data.feed.openSearch$totalResults.$t > 0));
-          }
+        var request = new AJAX(this.apiUrl.replace('%video', videoId));
+        request.then((raw) => {
+          var data = JSON.parse(raw);
+          callback(element, (data.feed.openSearch$totalResults.$t > 0));
         });
       }
     },
@@ -131,32 +129,20 @@ var VideoComponent = {
         if (langScope) {
           language = DOM.getAttribute(langScope, 'lang').split('-')[0];
         }
-        var foundLanguage = false;
         $captions.forEach(function (caption) {
           var srclang = caption.getAttribute('srclang');
           if (!srclang || srclang.toLowerCase() === language) {
-            foundLanguage = true;
-            try {
-              var request = $.ajax({
-                url: DOM.getAttribute(this, 'src'),
-                type: 'HEAD',
-                async: false,
-                error: function () {}
-              });
-              if (request.status === 404) {
-                foundLanguage = false;
+            let request = new AJAX(DOM.getAttribute(caption, 'src'));
+            request.then(
+              () => {
+                callback(element, true);
+              },
+              () => {
+                callback(element, false);
               }
-            }
-            catch (e) {
-              console.warn('VideoComponent: AJAX requests are not allowed');
-            }
+            );
           }
         });
-        if (!foundLanguage) {
-          callback(element, false);
-          return;
-        }
-        callback(element, true);
       }
     }
   }

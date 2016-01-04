@@ -1,5 +1,4 @@
 const Case = require('Case');
-const DOM = require('DOM');
 const HeadingSelectorComponent = require('HeadingSelectorComponent');
 var HeadingLevelComponent = function (test, options) {
   var priorLevel = false;

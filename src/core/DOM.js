@@ -11,23 +11,33 @@ let _isDomError = (methodName) => {
   throw new Error('Non-DOM object passed to the method DOM.' + methodName);
 };
 
+let _assertIsDom = (element, methodName) => {
+  let isObjectNode = (
+    (typeof element === 'function') &&
+    (element.nodeName === 'OBJECT')
+  );
+  if (
+    !element ||
+    !isDom(element) &&
+    !isObjectNode
+  ) {
+    _isDomError(methodName);
+  }
+};
+
 let DOM = {
   scry: (selector, context) => {
     var elements = [];
     if (Array.isArray(context)) {
       context.forEach((ct) => {
-        if (ct && !isDom(ct)) {
-          _isDomError('scry');
-        }
+        ct && _assertIsDom(ct, 'scry');
         elements = elements.concat(
           select.all(selector, ct)
         );
       });
     }
     else {
-      if (context && !isDom(context)) {
-        _isDomError('scry');
-      }
+      context && _assertIsDom(context, 'scry');
       elements = elements.concat(
         select.all(selector, context)
       );
@@ -44,24 +54,18 @@ let DOM = {
     return parentNodes;
   },
   children: (element) => {
-    if (!isDom(element)) {
-      _isDomError('children');
-    }
+    _assertIsDom(element, 'children');
     return Array.prototype.slice.call(element.children);
   },
   hasAttribute: (element, attrName) => {
-    if (!isDom(element)) {
-      _isDomError('hasAttribute');
-    }
+    _assertIsDom(element, 'hasAttribute');
     return typeof element[attrName] !== 'undefined';
   },
   /**
    * Sets attributes on a node.
    */
   setAttributes: function (element, attributes) {
-    if (!isDom(element)) {
-      _isDomError('setAttributes');
-    }
+    _assertIsDom(element, 'setAttributes');
     // The type attribute needs to be set first in IE, so we special case it.
     if (attributes.type) {
       element.type = attributes.type;
@@ -90,15 +94,11 @@ let DOM = {
     }
   },
   getAttribute: (element, name) => {
-    if (!isDom(element)) {
-      _isDomError('getAttribute');
-    }
+    _assertIsDom(element, 'getAttribute');
     return element.getAttribute(name);
   },
   getStyle: (element, name) => {
-    if (!isDom(element)) {
-      _isDomError('getStyle');
-    }
+    _assertIsDom(element, 'getStyle');
     var value;
     try {
       value = element.style[name];
@@ -109,9 +109,7 @@ let DOM = {
     return value;
   },
   getComputedStyle: (element, name) => {
-    if (!isDom(element)) {
-      _isDomError('getComputedStyle');
-    }
+    _assertIsDom(element, 'getComputedStyle');
     var value;
     try {
       value = window.getComputedStyle(element).getPropertyValue(name);
@@ -122,9 +120,7 @@ let DOM = {
     return value;
   },
   next: (element) => {
-    if (!isDom(element)) {
-      _isDomError('next');
-    }
+    _assertIsDom(element, 'next');
     var parentElement = element.parentElement;
     var children;
     var index;
@@ -137,9 +133,7 @@ let DOM = {
     }
   },
   prev: (element) => {
-    if (!isDom(element)) {
-      _isDomError('prev');
-    }
+    _assertIsDom(element, 'prev');
     var parentElement = element.parentElement;
     var children;
     var index;
@@ -152,9 +146,7 @@ let DOM = {
     }
   },
   nextAll: (element) => {
-    if (!isDom(element)) {
-      _isDomError('nextAll');
-    }
+    _assertIsDom(element, 'nextAll');
     var parentElement = element.parentElement;
     var children;
     var index;
@@ -165,9 +157,7 @@ let DOM = {
     return children.slice(index + 1);
   },
   prevAll: (element) => {
-    if (!isDom(element)) {
-      _isDomError('prevAll');
-    }
+    _assertIsDom(element, 'prevAll');
     var parentElement = element.parentElement;
     var children;
     var index;
@@ -178,9 +168,7 @@ let DOM = {
     return children.slice(0, index);
   },
   is: (element, nodeName) => {
-    if (!isDom(element)) {
-      _isDomError('is');
-    }
+    _assertIsDom(element, 'is');
     var elementNodeName = element.nodeName.toLowerCase();
     var names;
     if (typeof nodeName === 'string') {
@@ -210,9 +198,7 @@ let DOM = {
     return expandedNames.indexOf(elementNodeName) > -1;
   },
   setData: (element, key, value) => {
-    if (!isDom(element)) {
-      _isDomError('setData');
-    }
+    _assertIsDom(element, 'setData');
     var dataKey = 'data-' + key;
     var attrs = [];
     attrs[dataKey] = value
@@ -220,32 +206,25 @@ let DOM = {
     DataSet(element);
   },
   getData: (element, key) => {
-    if (!isDom(element)) {
-      _isDomError('getData');
-    }
+    _assertIsDom(element, 'getData');
     return DataSet(element)[key];
   },
   removeData: (element, key) => {
-    if (!isDom(element)) {
-      _isDomError('removeData');
-    }
+    _assertIsDom(element, 'removeData');
     var dataKey = 'data-' + key;
     element.removeAttribute(dataKey);
     DataSet(element);
   },
   text: (element) => {
-    if (!isDom(element)) {
-      _isDomError('text');
-    }
+    _assertIsDom(element, 'text');
     return element.textContent || element.innerText;
   },
   offset: (element) => {
-    if (!isDom(element)) {
-      _isDomError('offset');
-    }
+    _assertIsDom(element, 'offset');
     return documentOffset(element);
   },
   isVisible: (element) => {
+    _assertIsDom(element, 'isVisible');
     let display = DOM.getComputedStyle(element, 'display');
     let visibility = DOM.getComputedStyle(element, 'visibility');
     return !(display === 'none') && !(visibility === 'hidden');
