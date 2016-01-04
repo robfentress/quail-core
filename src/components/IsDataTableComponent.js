@@ -28,11 +28,14 @@ const IsDataTableComponent = function (table) {
       }
       spanIndex[index]++;
     });
-    spanIndex.forEach(function (count) {
-      if (count < numberRows) {
-        isDataTable = false;
+    for (let ii in spanIndex) {
+      if (spanIndex.hasOwnProperty(ii)) {
+        let count = spanIndex[ii];
+        if (count < numberRows) {
+          isDataTable = false;
+        }
       }
-    });
+    }
   }
   // If there are sub tables, but not in the same column row after row, this is a layout table
   var subTables = DOM.scry('table', table);
@@ -46,11 +49,14 @@ const IsDataTableComponent = function (table) {
       }
       subTablesIndexes[parentIndex]++;
     });
-    subTablesIndexes.forEach(function (count) {
-      if (count < numberRows) {
-        isDataTable = false;
+    for (let sii in subTablesIndexes) {
+      if (subTablesIndexes.hasOwnProperty(sii)) {
+        let count = subTablesIndexes[sii];
+        if (count < numberRows) {
+          isDataTable = false;
+        }
       }
-    });
+    }
   }
   return isDataTable;
 };

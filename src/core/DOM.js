@@ -172,6 +172,10 @@ let DOM = {
     }
     return children.slice(0, index);
   },
+  index: (element) => {
+    let siblings = DOM.children(element.parentElement);
+    return siblings.indexOf(element);
+  },
   is: (element, nodeName) => {
     _assertIsDom(element, 'is');
     var elementNodeName = element.nodeName.toLowerCase();

@@ -4,13 +4,18 @@
 const DOM = require('DOM');
 var HasEventListenerComponent = function (element, event) {
   var onEventAttr = DOM.getAttribute(element, 'on' + event);
-  if (typeof onEventAttr !== 'undefined') {
+  if (onEventAttr) {
     return true;
   }
   // jQuery events are stored in private objects
-  if ($._data(element, 'events') &&
-    typeof $._data(element, 'events')[event] !== 'undefined') {
-    return true;
+  var $ = window.jQuery || window.$ || {};
+  if ($._data) {
+    if (
+      $._data(element, 'events') &&
+      typeof $._data(element, 'events')[event] !== 'undefined'
+    ) {
+      return true;
+    }
   }
   // Certain elements always have default events, so we create a new element to compare default events.
   if (DOM.is(element, 'a[href], input, button, video, textarea') &&

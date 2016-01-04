@@ -24,7 +24,7 @@ var EventComponent = function (test, options) {
       var hasOnListener = HasEventListenerComponent(item, eventName);
       // Determine if the element has jQuery listeners for the event.
       var jqevents;
-      var $ = window.jQuery || window.$;
+      var $ = window.jQuery || window.$ || {};
       if ($._data) {
         jqevents = $._data(this, 'events');
       }
