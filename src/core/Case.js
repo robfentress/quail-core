@@ -1,7 +1,7 @@
 /**
  * @providesModule Case
  */
-
+const DOM = require('DOM');
 var Case = (function () {
 
   /**
@@ -181,7 +181,7 @@ var Case = (function () {
        *   Whether or not the selector string represents a unique DOM element.
        */
       function isUniquePath (selector) {
-        return $(selector).length === 1;
+        return DOM.scry(selector).length === 1;
       }
 
       /**

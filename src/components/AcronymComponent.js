@@ -1,27 +1,32 @@
 const Case = require('Case');
+const DOM = require('DOM');
 var AcronymComponent = function (test) {
-  test.get('$scope').each(function () {
-    var $scope = $(this);
+  test.get('scope').forEach(function (scope) {
     var alreadyReported = {};
     var predefined = {};
 
     // Find defined acronyms within this scope.
-    $scope.find('acronym[title], abbr[title]').each(function () {
-      predefined[$(this).text().toUpperCase().trim()] = $(this).attr('title');
+    DOM.scry('acronym[title], abbr[title]', scope).forEach(function (element) {
+      predefined[
+        element.innerText
+          .trim()
+          .replace(/\n/g, '')
+          .replace(/( ){2,}/g, ' ')
+          .toUpperCase()
+      ] = element.getAttribute('title');
     });
 
     // Consider all block-level html elements that contain text.
-    $scope.find('p, span, h1, h2, h3, h4, h5').each(function () {
-      var self = this;
-      var $el = $(self);
-
-      var words = $el.text().split(' ');
+    DOM.scry('p, span, h1, h2, h3, h4, h5', scope).forEach(function (element) {
+      var self = element;
+      var text = self.innerText;
+      var words = text.split(' ');
       // Keep a list of words that might be acronyms.
       var infractions = [];
       // If there is more than one word and ??.
-      if (words.length > 1 && $el.text().toUpperCase() !== $el.text()) {
+      if (words.length > 1 && text.toUpperCase() !== text) {
         // Check each word.
-        $.each(words, function (index, word) {
+        words.forEach(function (word) {
           // Only consider words great than one character.
           if (word.length < 2) {
             return;

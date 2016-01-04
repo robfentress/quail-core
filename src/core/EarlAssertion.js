@@ -1,5 +1,3 @@
-var jQuery = require('jquery/dist/jquery');
-
 var EarlAssertion = (function () {
   var pageUrl;
   var resultPriorityMap = [

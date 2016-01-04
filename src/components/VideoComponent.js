@@ -2,37 +2,43 @@
  * Helper object that tests videos.
  * @todo - allow this to be exteded more easily.
  */
+const AJAX = require('AJAX');
+const DOM = require('DOM');
 var Language = require('LanguageComponent');
 
 var VideoComponent = {
 
   /**
    * Iterates over listed video providers and runs their `isVideo` method.
-   * @param jQuery $element
-   *   An element in a jQuery wrapper.
+   * @param Element element
    *
    * @return Boolean
    *   Whether the element is a video.
    */
   isVideo: function (element) {
     var isVideo = false;
-    $.each(this.providers, function () {
-      if (element.is(this.selector) && this.isVideo(element)) {
-        isVideo = true;
+    for (var name in this.providers) {
+      if (this.providers.hasOwnProperty(name)) {
+        var provider = this.providers[name];
+        if (DOM.is(element, provider.selector) && provider.isVideo(element)) {
+          isVideo = true;
+        }
       }
-    });
+    }
     return isVideo;
   },
 
   findVideos: function (element, callback) {
-    $.each(this.providers, function (name, provider) {
-      element.find(this.selector).each(function () {
-        var video = $(this);
-        if (provider.isVideo(video)) {
-          provider.hasCaptions(video, callback);
-        }
-      });
-    });
+    for (var name in this.providers) {
+      if (this.providers.hasOwnProperty(name)) {
+        var provider = this.providers[name];
+        DOM.scry(provider.selector, element).forEach(function (video) {
+          if (provider.isVideo(video)) {
+            provider.hasCaptions(video, callback);
+          }
+        });
+      }
+    }
   },
 
   providers: {
@@ -48,9 +54,9 @@ var VideoComponent = {
       },
 
       getVideoId: function (element) {
-        var attribute = (element.is('iframe')) ? 'src' : 'href';
+        var attribute = (DOM.is(element, 'iframe')) ? 'src' : 'href';
         var regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&\?]*).*/;
-        var match = element.attr(attribute).match(regExp);
+        var match = DOM.getAttribute(element, attribute).match(regExp);
         if (match && match[7].length === 11) {
           return match[7];
         }
@@ -59,13 +65,10 @@ var VideoComponent = {
 
       hasCaptions: function (element, callback) {
         var videoId = this.getVideoId(element);
-        $.ajax({
-          url: this.apiUrl.replace('%video', videoId),
-          async: false,
-          dataType: 'json',
-          success: function (data) {
-            callback(element, (data.feed.openSearch$totalResults.$t > 0));
-          }
+        var request = new AJAX(this.apiUrl.replace('%video', videoId));
+        request.then((raw) => {
+          var data = JSON.parse(raw);
+          callback(element, (data.feed.openSearch$totalResults.$t > 0));
         });
       }
     },
@@ -76,11 +79,11 @@ var VideoComponent = {
 
       isVideo: function (element) {
         var isVideo = false;
-        if (element.find('param').length === 0) {
+        if (DOM.scry('param', element).length === 0) {
           return false;
         }
-        element.find('param[name=flashvars]').each(function () {
-          if ($(this).attr('value').search(/\.(flv|mp4)/i) > -1) {
+        DOM.scry('param[name=flashvars]', element).forEach(function (element) {
+          if (element.getAttribute('value').search(/\.(flv|mp4)/i) > -1) {
             isVideo = true;
           }
         });
@@ -89,10 +92,15 @@ var VideoComponent = {
 
       hasCaptions: function (element, callback) {
         var hasCaptions = false;
-        element.find('param[name=flashvars]').each(function () {
-          if (($(this).attr('value').search('captions') > -1 &&
-             $(this).attr('value').search('.srt') > -1) ||
-             $(this).attr('value').search('captions.pluginmode') > -1) {
+        DOM.scry('param[name=flashvars]', element).forEach(function (element) {
+          var val = element.getAttribute('value') || '';
+          if (
+            (
+              val.search('captions') > -1 &&
+              val.search('.srt') > -1
+            ) ||
+            val.search('captions.pluginmode') > -1
+          ) {
             hasCaptions = true;
           }
         });
@@ -105,44 +113,36 @@ var VideoComponent = {
       selector: 'video',
 
       isVideo: function (element) {
-        return element.is('video');
+        return DOM.is(element, 'video');
       },
 
       hasCaptions: function (element, callback) {
-        var $captions = element.find('track[kind=subtitles], track[kind=captions]');
+        var $captions = DOM.scry('track[kind=subtitles], track[kind=captions]', element);
         if (!$captions.length) {
           callback(element, false);
           return;
         }
         var language = Language.getDocumentLanguage(element, true);
-        if (element.parents('[lang]').length) {
-          language = element.parents('[lang]').first().attr('lang').split('-')[0];
+        var langScope = DOM.parents(element).find((parent) => {
+          return DOM.hasAttribute(parent, 'lang');
+        })[0];
+        if (langScope) {
+          language = DOM.getAttribute(langScope, 'lang').split('-')[0];
         }
-        var foundLanguage = false;
-        $captions.each(function () {
-          if (!$(this).attr('srclang') || $(this).attr('srclang').toLowerCase() === language) {
-            foundLanguage = true;
-            try {
-              var request = $.ajax({
-                url: $(this).attr('src'),
-                type: 'HEAD',
-                async: false,
-                error: function () {}
-              });
-              if (request.status === 404) {
-                foundLanguage = false;
+        $captions.forEach(function (caption) {
+          var srclang = caption.getAttribute('srclang');
+          if (!srclang || srclang.toLowerCase() === language) {
+            let request = new AJAX(DOM.getAttribute(caption, 'src'));
+            request.then(
+              () => {
+                callback(element, true);
+              },
+              () => {
+                callback(element, false);
               }
-            }
-            catch (e) {
-              null;
-            }
+            );
           }
         });
-        if (!foundLanguage) {
-          callback(element, false);
-          return;
-        }
-        callback(element, true);
       }
     }
   }

@@ -37,7 +37,7 @@ var TestCollection = (function () {
     run: function (callbacks) {
       var self = this;
       callbacks = callbacks || {};
-      this.each(function (index, test) {
+      this.forEach(function (test) {
         // Allow a prefilter to remove a case.
         if (callbacks.preFilter) {
           self.listenTo(test, 'resolve', function (eventName, test, _case) {
@@ -71,7 +71,7 @@ var TestCollection = (function () {
       this.testsComplete = debounce(testsComplete.bind(this), 500);
 
       // Invoke each test.
-      this.each(function (index, test) {
+      this.forEach(function (test) {
         test.invoke();
       });
 
@@ -79,22 +79,6 @@ var TestCollection = (function () {
       // completing in the off chance that no Tests are run.
       this.testsComplete();
 
-      return this;
-    },
-    /**
-     * Execute a callback for every element in the matched set.
-     */
-    each: function (iterator) {
-      var args = [].slice.call(arguments, 1);
-      for (var i = 0, len = this.length; i < len; ++i) {
-        args.unshift(this[i]);
-        args.unshift(i);
-        var cont = iterator.apply(this[i], args);
-        // Allow an iterator to break from the loop.
-        if (cont === false) {
-          break;
-        }
-      }
       return this;
     },
     /**
@@ -128,7 +112,7 @@ var TestCollection = (function () {
           function findAllTestsForTechnique (guidelineName, sectionId, techniqueName) {
             // Return a TestCollection instance.
             var tests = new TestCollection();
-            this.each(function (index, test) {
+            this.forEach(function (test) {
               // Get the configured guidelines for the test.
               var guidelines = test.get('guidelines');
               // If this test is configured for this section and it has
@@ -178,7 +162,7 @@ var TestCollection = (function () {
       for (var i = 0, il = statuses.length; i < il; ++i) {
         var status = statuses[i];
         // Loop through the tests.
-        this.each(function (index, test) {
+        this.forEach(function (test) {
           var testStatus = test.get('status');
           if (testStatus === status) {
             tests.add(test);
@@ -234,6 +218,7 @@ var TestCollection = (function () {
         });
       }
     },
+    forEach: [].forEach,
     push: [].push,
     sort: [].sort,
     splice: [].splice
@@ -249,7 +234,7 @@ var TestCollection = (function () {
     var complete = true;
     // @todo, this iteration would be faster with _.findWhere, that breaks on
     // the first match.
-    this.each(function (index, test) {
+    this.forEach(function (test) {
       if (!test.get('complete')) {
         complete = false;
       }

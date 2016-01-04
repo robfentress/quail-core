@@ -3,6 +3,7 @@
  * color contrast/luminosity.
  */
 var ConvertToPx = require('ConvertToPxComponent');
+const DOM = require('DOM');
 var IsUnreadable = require('IsUnreadable');
 
 var ColorComponent = (function () {
@@ -95,13 +96,13 @@ var ColorComponent = (function () {
      * WCAG at a certain contrast ratio.
      */
     passesWCAGColor: function (element, foreground, background, level) {
-      var pxfsize = ConvertToPx(element.css('fontSize'));
+      var pxfsize = ConvertToPx(DOM.getComputedStyle(element, 'font-size'));
       if (typeof level === 'undefined') {
         if (pxfsize >= 18) {
           level = 3;
         }
         else {
-          var fweight = element.css('fontWeight');
+          var fweight = DOM.getComputedStyle(element, 'font-weight');
           if (pxfsize >= 14 && (fweight === 'bold' || parseInt(fweight, 10) >= 700)) {
             level = 3;
           }
@@ -170,27 +171,29 @@ var ColorComponent = (function () {
      */
     getColor: function (element, type) {
       var self = colors;
-      if (!$(element).data('cache-id')) {
-        $(element).data('cache-id', 'id_' + Math.random());
+      var cacheId = DOM.getData(element, 'quail-cache-id');
+      if (!cacheId) {
+        cacheId = 'id_' + Math.random();
+        DOM.setData(element, 'quail-cache-id', cacheId);
       }
-      var cacheKey = 'getColor_' + type + '_' + $(element).data('cache-id');
+      var cacheKey = 'getColor_' + type + '_' + cacheId;
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }
 
       if (type === 'foreground') {
-        colors.cache[cacheKey] = (element.css('color')) ? element.css('color') : 'rgb(0,0,0)';
+        colors.cache[cacheKey] = (DOM.getComputedStyle(element, 'color')) ? DOM.getComputedStyle(element, 'color') : 'rgb(0,0,0)';
         return colors.cache[cacheKey];
       }
 
-      var bcolor = element.css('background-color');
+      var bcolor = DOM.getComputedStyle(element, 'background-color');
       if (colors.hasBackgroundColor(bcolor)) {
         colors.cache[cacheKey] = bcolor;
         return colors.cache[cacheKey];
       }
 
-      element.parents().each(function () {
-        var pcolor = $(this).css('background-color');
+      DOM.parents(element).forEach(function (element) {
+        var pcolor = DOM.getComputedStyle(element, 'background-color');
         if (colors.hasBackgroundColor(pcolor)) {
           return self.cache[cacheKey] = pcolor;
         }
@@ -236,17 +239,18 @@ var ColorComponent = (function () {
      * Returns background image of an element or its parents.
      */
     getBackgroundImage: function (element) {
-      if (!$(element).data('cache-id')) {
-        $(element).data('cache-id', 'id_' + Math.random());
+      var cacheId = DOM.getData(element, 'quail-cache-id');
+      if (!cacheId) {
+        cacheId = 'id_' + Math.random();
+        DOM.setData(element, 'quail-cache-id', cacheId);
       }
 
-      var cacheKey = 'getBackgroundImage_' + $(element).data('cache-id');
+      var cacheKey = 'getBackgroundImage_' + cacheId;
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }
-      element = element[0];
       while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
-        var bimage = $(element).css('background-image');
+        var bimage = DOM.getComputedStyle(element, 'background-image');
         if (bimage && bimage !== 'none' && bimage.search(/^(.*?)url(.*?)$/i) !== -1) {
           colors.cache[cacheKey] = bimage.replace('url(', '').replace(/['"]/g, '').replace(')', '');
           return colors.cache[cacheKey];
@@ -261,31 +265,34 @@ var ColorComponent = (function () {
      * Returns background image of an element or its parents.
      */
     getBackgroundGradient: function (element) {
-      if (!$(element).data('cache-id')) {
-        $(element).data('cache-id', 'id_' + Math.random());
+      var cacheId = DOM.getData(element, 'quail-cache-id');
+      if (!cacheId) {
+        cacheId = 'id_' + Math.random();
+        DOM.setData(element, 'quail-cache-id', cacheId);
       }
 
-      var cacheKey = 'getBackgroundGradient_' + $(element).data('cache-id');
+      var cacheKey = 'getBackgroundGradient_' + cacheId;
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }
 
       var notEmpty = function (s) {
-        return $.trim(s) !== '';
+        return (typeof s === 'string') && (s.trim() !== '');
       };
-      element = element[0];
       while (element && element.nodeType === 1 && element.nodeName !== 'BODY' && element.nodeName !== 'HTML') {
         // Exit if element has a background color.
-        if (colors.hasBackgroundColor($(element).css('background-color'))) {
+        if (colors.hasBackgroundColor(DOM.getComputedStyle(element, 'background-color'))) {
           colors.cache[cacheKey] = false;
           return false;
         }
-        var bimage = $(element).css('background-image');
+        var bimage = DOM.getComputedStyle(element, 'background-image');
         if (bimage && bimage !== 'none' && bimage.search(/^(.*?)gradient(.*?)$/i) !== -1) {
           var gradient = bimage.match(/gradient(\(.*\))/g);
           if (gradient.length > 0) {
             gradient = gradient[0].replace(/(linear|radial|\d+deg|from|\bto\b|gradient|top|left|bottom|right|color-stop|center|\d*%)/g, '');
-            colors.cache[cacheKey] = $.grep(gradient.match(/(rgb\([^\)]+\)|#[a-z\d]*|[a-z]*)/g), notEmpty);
+            colors.cache[cacheKey] = gradient
+              .match(/(rgb\([^\)]+\)|#[a-z\d]*|[a-z]*)/g)
+              .filter(notEmpty);
             return colors.cache[cacheKey];
           }
         }
@@ -376,41 +383,55 @@ var ColorComponent = (function () {
      * Traverse visual tree for background property.
      */
     traverseVisualTreeForBackground: function (element, property) {
-      if (!$(element).data('cache-id')) {
-        $(element).data('cache-id', 'id_' + Math.random());
+      var cacheId = DOM.getData(element, 'quail-cache-id');
+      if (!cacheId) {
+        cacheId = 'id_' + Math.random();
+        DOM.setData(element, 'quail-cache-id', cacheId);
       }
 
-      var cacheKey = 'traverseVisualTreeForBackground_' + $(element).data('cache-id') + '_' + property;
+      var cacheKey = 'traverseVisualTreeForBackground_' + cacheId + '_' + property;
       if (colors.cache[cacheKey] !== undefined) {
         return colors.cache[cacheKey];
       }
 
       var notempty = function (s) {
-        return $.trim(s) !== '';
+        return (typeof s === 'string') && s.trim() !== '';
       };
 
       var foundIt;
       var scannedElements = [];
 
       // Scroll to make sure element is visible.
-      element[0].scrollIntoView();
+      element.scrollIntoView();
 
       // Get relative x and y.
-      var x = element.offset().left - $(window).scrollLeft();
-      var y = element.offset().top - $(window).scrollTop();
+      var x = DOM.offset(element).left - window.scrollX;
+      var y = DOM.offset(element).top - window.scrollY;
 
       // Hide current element.
       scannedElements.push({
         element: element,
-        visibility: element.css('visibility')
+        visibility: DOM.getComputedStyle(element, 'visibility')
       });
-      element.css('visibility', 'hidden');
+      DOM.setAttributes(element, {
+        style: {
+          visibility: 'hidden'
+        }
+      });
 
       // Get element at position x, y. This only selects visible elements.
       var el = document.elementFromPoint(x, y);
-      while (foundIt === undefined && el && el.tagName !== 'BODY' && el.tagName !== 'HTML') {
-        el = $(el);
-        var bcolor = el.css('backgroundColor');
+      const MAX_LOOPS = 200;
+      let count = 1;
+      while (
+        foundIt === undefined &&
+        el &&
+        el.tagName !== 'BODY' &&
+        el.tagName !== 'HTML' &&
+        count <= MAX_LOOPS
+      ) {
+        count++;
+        var bcolor = DOM.getComputedStyle(el, 'background-color');
         var bimage;
         // Only check visible elements.
         switch (property) {
@@ -426,12 +447,14 @@ var ColorComponent = (function () {
             continue;
           }
 
-          bimage = el.css('backgroundImage');
+          bimage = DOM.getComputedStyle(el, 'background-image');
           if (bimage && bimage !== 'none' && bimage.search(/^(.*?)gradient(.*?)$/i) !== -1) {
             var gradient = bimage.match(/gradient(\(.*\))/g);
             if (gradient.length > 0) {
               gradient = gradient[0].replace(/(linear|radial|\d+deg|from|\bto\b|gradient|top|left|bottom|right|color-stop|center|\d*%)/g, '');
-              foundIt = $.grep(gradient.match(/(rgb\([^\)]+\)|#[a-z\d]*|[a-z]*)/g), notempty);
+              foundIt = gradient
+                .match(/(rgb\([^\)]+\)|#[a-z\d]*|[a-z]*)/g)
+                .filter(notempty);
             }
           }
           break;
@@ -441,7 +464,7 @@ var ColorComponent = (function () {
             foundIt = false;
             continue;
           }
-          bimage = el.css('backgroundImage');
+          bimage = DOM.getComputedStyle(el, 'background-image');
           if (bimage && bimage !== 'none' && bimage.search(/^(.*?)url(.*?)$/i) !== -1) {
             foundIt = bimage.replace('url(', '').replace(/['"]/g, '').replace(')', '');
           }
@@ -449,15 +472,23 @@ var ColorComponent = (function () {
         }
         scannedElements.push({
           element: el,
-          visibility: el.css('visibility')
+          visibility: DOM.getComputedStyle(el, 'visibility')
         });
-        el.css('visibility', 'hidden');
+        DOM.setAttributes(el, {
+          style: {
+            visibility: 'hidden'
+          }
+        });
         el = document.elementFromPoint(x, y);
       }
 
       // Reset visibility.
       for (var i = 0; i < scannedElements.length; i++) {
-        scannedElements[i].element.css('visibility', scannedElements[i].visibility);
+        DOM.setAttributes(scannedElements[i].element, {
+          style: {
+            visibility: scannedElements[i].visibility
+          }
+        });
       }
 
       colors.cache[cacheKey] = foundIt;
@@ -489,7 +520,7 @@ var ColorComponent = (function () {
   function textShouldBeTested (textNode) {
     // We want a tag, not just the text node.
     var element = textNode.parentNode;
-    var $this = $(element);
+    var $this = element;
 
     // The nodeType of the element must be 1. Nodes of type 1 implement the Element
     // interface which is required of the first argument passed to window.getComputedStyle.
@@ -503,7 +534,7 @@ var ColorComponent = (function () {
       // Ignore elements whose content isn't displayed to the page.
       return false;
     }
-    else if (IsUnreadable($this.text())) {
+    else if (IsUnreadable(DOM.text($this))) {
       // Bail out if the text is not readable.
       return false;
 
@@ -539,7 +570,7 @@ var ColorComponent = (function () {
     for (var selector in groupsBySelector) {
       if (groupsBySelector.hasOwnProperty(selector)) {
         var cases = groupsBySelector[selector];
-        cases.each(function (index, _case) {
+        cases.forEach(function (_case) {
           if (_case.get('status') === passed) {
             // This can just be an empty string. We only need the passed hash
             // to contain keys, not values.
