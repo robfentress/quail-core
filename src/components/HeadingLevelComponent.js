@@ -7,7 +7,7 @@ var HeadingLevelComponent = function (test, options) {
       var level = parseInt(element.tagName.substr(-1, 1), 10);
       if (priorLevel === options.headingLevel && level > priorLevel + 1) {
         test.add(Case({
-          element: this,
+          element: element,
           status: 'failed'
         }));
       }

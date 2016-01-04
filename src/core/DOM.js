@@ -44,14 +44,19 @@ let DOM = {
     }
     return elements;
   },
+  parent: (element) => {
+    _assertIsDom(element, 'parent');
+    return element.parentElement;
+  },
   parents: (element) => {
-    let parentNodes = [];
+    _assertIsDom(element, 'parents');
+    let parentElements = [];
     let node = element;
-    while (node.parentNode) {
-      parentNodes.push(node.parentNode);
-      node = node.parentNode;
+    while (node.parentElement) {
+      parentElements.push(node.parentElement);
+      node = node.parentElement;
     }
-    return parentNodes;
+    return parentElements;
   },
   children: (element) => {
     _assertIsDom(element, 'children');
