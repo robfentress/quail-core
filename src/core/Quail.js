@@ -1,5 +1,5 @@
 /**
- * @providesModule quail
+ * @providesModule Quail
  */
 
 'use strict';
@@ -12,15 +12,7 @@ const TestCollection = require('TestCollection');
 const wcag2 = require('wcag2');
 const _Assessments = require('_Assessments');
 
-var quail = {
-
-  options: {},
-
-  html: null,
-
-  accessibilityResults: {},
-
-  accessibilityTests: null,
+var Quail = {
 
   guidelines: {
     wcag: {
@@ -48,44 +40,29 @@ var quail = {
     }
   },
 
-  // @var TestCollection
-  tests: {},
-
   /**
-   * Main run function for quail.
+   * Main run function for Quail.
    */
   run: function (options) {
-    function buildTests (quail, assessmentList, options) {
-      // An array of test names.
-      if (assessmentList.constructor === Array) {
-        for (var i = 0, il = assessmentList.length; i < il; ++i) {
-          let name = assessmentList[i];
-          let mod = _Assessments.get(name);
-          if (mod) {
-            quail.tests.set(name, {
-              scope: options.html || null,
-              callback: mod.run,
-              ...mod.meta
-            });
-          }
+    function buildTests (assessmentList, options) {
+      // Create an empty TestCollection.
+      let testCollection = TestCollection([], {
+        scope: options.scope || document
+      });
+      let assessmentsToRun = new Set(
+        assessmentList || _Assessments.keys()
+      );
+      for (let name of assessmentsToRun) {
+        let mod = _Assessments.get(name);
+        if (mod) {
+          testCollection.set(name, {
+            scope: options.scope || document,
+            callback: mod.run,
+            ...mod.meta
+          });
         }
       }
-      else {
-        // Create test configuration objects to appease the core app for now.
-        var name;
-        for (name in assessmentList) {
-          if (assessmentList.hasOwnProperty(name)) {
-            let mod = _Assessments.get(name);
-            if (mod) {
-              quail.tests.set(name, {
-                scope: options.html || null,
-                callback: mod.run,
-                ...mod.meta
-              });
-            }
-          }
-        }
-      }
+      return testCollection;
     }
 
     /**
@@ -94,19 +71,19 @@ var quail = {
      * This function is called when the tests are collected, which might occur
      * after an AJAX request for a test JSON file.
      */
-    function _run () {
+    function _run (assessments) {
       // Set up Guideline-specific behaviors.
       var noop = function () {};
-      for (var guideline in quail.guidelines) {
-        if (quail.guidelines[guideline] && typeof quail.guidelines[guideline].setup === 'function') {
-          quail.guidelines[guideline].setup(quail.tests, this, {
+      for (var guideline in Quail.guidelines) {
+        if (Quail.guidelines[guideline] && typeof Quail.guidelines[guideline].setup === 'function') {
+          Quail.guidelines[guideline].setup(assessments, this, {
             successCriteriaEvaluated: options.successCriteriaEvaluated || noop
           });
         }
       }
 
       // Invoke all the registered tests.
-      quail.tests.run({
+      assessments.run({
         preFilter: options.preFilter || function () {},
         caseResolve: options.caseResolve || function () {},
         testComplete: options.testComplete || function () {},
@@ -115,21 +92,16 @@ var quail = {
       });
     }
 
-    // Create an empty TestCollection.
-    quail.tests = TestCollection([], {
-      scope: quail.html || null
-    });
-
-    // Let wcag2 run itself, will call quail again when it knows what
+    // Let wcag2 run itself, will call Quail again when it knows what
     // to
     if (options.guideline === 'wcag2') {
       wcag2.run(options);
     }
-
-    // If a list of specific tests is provided, use them.
-    else if (options.accessibilityTests) {
-      buildTests(quail, options.accessibilityTests, options);
-      _run.call(quail);
+    else {
+      // If a list of specific tests is provided, use them.
+      _run(
+        buildTests(options.assessments, options)
+      );
     }
   },
 
@@ -152,9 +124,9 @@ var quail = {
 };
 
 globalQuail.run = globalQuail.run || function (...args) {
-  quail.run(...args);
+  Quail.run(...args);
 }
 
 window.globalQuail = globalQuail;
 
-module.exports = quail;
+module.exports = Quail;

@@ -15,8 +15,8 @@ var runQuailOutputToConsole = (function () {
     };
 
     quail.run({
-      accessibilityTests: [window.assessmentName],
-      html: DOM.scry('html'),
+      assessments: [window.assessmentName],
+      scope: DOM.scry('html'),
       // Called when an individual Case in a test is resolved.
       caseResolve: function (eventName, test, _case) {
         var name = test.get('name');
