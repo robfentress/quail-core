@@ -9,7 +9,6 @@ require('babel-polyfill/dist/polyfill');
 var globalQuail = window.globalQuail || {};
 
 const TestCollection = require('TestCollection');
-const wcag2 = require('wcag2');
 const _Assessments = require('_Assessments');
 
 var quail = {
@@ -40,44 +39,28 @@ var quail = {
     }
   },
 
-  // @var TestCollection
-  tests: {},
-
   /**
    * Main run function for quail.
    */
   run: function (options) {
-    function buildTests (quail, assessmentList, options) {
-      // An array of test names.
-      if (assessmentList.constructor === Array) {
-        for (var i = 0, il = assessmentList.length; i < il; ++i) {
-          let name = assessmentList[i];
-          let mod = _Assessments.get(name);
-          if (mod) {
-            quail.tests.set(name, {
-              scope: options.html || null,
-              callback: mod.run,
-              ...mod.meta
-            });
-          }
+    function buildTests (assessmentList) {
+      // Create an empty TestCollection.
+      var testCollection = TestCollection([], {
+        scope: options.html || document
+      });
+
+      for (var i = 0, il = assessmentList.length; i < il; ++i) {
+        let name = assessmentList[i];
+        let mod = _Assessments.get(name);
+        if (mod) {
+          testCollection.set(name, {
+            scope: options.html || null,
+            callback: mod.run,
+            ...mod.meta
+          });
         }
       }
-      else {
-        // Create test configuration objects to appease the core app for now.
-        var name;
-        for (name in assessmentList) {
-          if (assessmentList.hasOwnProperty(name)) {
-            let mod = _Assessments.get(name);
-            if (mod) {
-              quail.tests.set(name, {
-                scope: options.html || null,
-                callback: mod.run,
-                ...mod.meta
-              });
-            }
-          }
-        }
-      }
+      return testCollection;
     }
 
     /**
@@ -86,19 +69,19 @@ var quail = {
      * This function is called when the tests are collected, which might occur
      * after an AJAX request for a test JSON file.
      */
-    function _run () {
+    function _run (testCollection) {
       // Set up Guideline-specific behaviors.
-      var noop = function () {};
-      for (var guideline in quail.guidelines) {
-        if (quail.guidelines[guideline] && typeof quail.guidelines[guideline].setup === 'function') {
-          quail.guidelines[guideline].setup(quail.tests, this, {
-            successCriteriaEvaluated: options.successCriteriaEvaluated || noop
-          });
-        }
-      }
+      // var noop = function () {};
+      // for (var guideline in quail.guidelines) {
+      //   if (quail.guidelines[guideline] && typeof quail.guidelines[guideline].setup === 'function') {
+      //     quail.guidelines[guideline].setup(testCollection, this, {
+      //       successCriteriaEvaluated: options.successCriteriaEvaluated || noop
+      //     });
+      //   }
+      // }
 
       // Invoke all the registered tests.
-      quail.tests.run({
+      testCollection.run({
         preFilter: options.preFilter || function () {},
         caseResolve: options.caseResolve || function () {},
         testComplete: options.testComplete || function () {},
@@ -107,22 +90,15 @@ var quail = {
       });
     }
 
-    // Create an empty TestCollection.
-    quail.tests = TestCollection([], {
-      scope: options.scope || document
-    });
-
     // Let wcag2 run itself, will call quail again when it knows what
     // to
-    if (options.guideline === 'wcag2') {
-      wcag2.run(options);
-    }
+    // if (options.guideline === 'wcag2') {
+    //   wcag2.run(options);
+    // }
 
     // If a list of specific tests is provided, use them.
-    else if (options.accessibilityTests) {
-      buildTests(quail, options.accessibilityTests, options);
-      _run.call(quail);
-    }
+    var aTests = buildTests(options.accessibilityTests);
+    _run.call(aTests);
   },
 
   // @todo, make this a set of methods that all classes extend.
