@@ -1,7 +1,6 @@
 // Basic output structure attributes.
 
 var quail = require('Quail');
-var DOM = require('DOM');
 
 var runQuailOutputToConsole = (function () {
   window.addEventListener('load', function () {
@@ -15,8 +14,7 @@ var runQuailOutputToConsole = (function () {
     };
 
     quail.run({
-      accessibilityTests: [window.assessmentName],
-      html: DOM.scry('html'),
+      assessments: [window.assessmentName],
       // Called when an individual Case in a test is resolved.
       caseResolve: function (eventName, test, _case) {
         var name = test.get('name');

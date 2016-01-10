@@ -26,7 +26,13 @@ var quail = {
       var testCollection = TestCollection([], {
         scope: htmlElement
       });
-
+      let assessmentsToRun = []
+      if (assessmentList && assessmentList.length) {
+        assessmentsToRun = assessmentList;
+      }
+      else {
+        assessmentsToRun = _Assessments.keys();
+      }
       assessmentList.forEach((name) => {
         let mod = _Assessments.get(name);
         if (mod) {
@@ -75,7 +81,7 @@ var quail = {
 
     // If a list of specific tests is provided, use them.
     _run(buildTests(
-      options.accessibilityTests,
+      options.assessments,
       options
     ));
   },
