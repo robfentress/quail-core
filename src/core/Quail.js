@@ -8,58 +8,35 @@ require('babel-polyfill/dist/polyfill');
 
 var globalQuail = window.globalQuail || {};
 
+const DOM = require('DOM');
+const Guideline = require('Guideline');
 const TestCollection = require('TestCollection');
 const _Assessments = require('_Assessments');
 
 var quail = {
 
-  guidelines: {
-    wcag: {
-      /**
-       * Perform WCAG specific setup.
-       */
-      setup: function (tests, listener, callbacks) {
-        callbacks = callbacks || {};
-        // Associate Success Criteria with the TestCollection.
-        for (var sc in this.successCriteria) {
-          if (this.successCriteria.hasOwnProperty(sc)) {
-            var criteria = this.successCriteria[sc];
-            criteria.registerTests(tests);
-            if (listener && listener.listenTo && typeof listener.listenTo === 'function') {
-              // Allow the invoker to listen to successCriteriaEvaluated events
-              // on each SuccessCriteria.
-              if (callbacks.successCriteriaEvaluated) {
-                listener.listenTo(criteria, 'successCriteriaEvaluated', callbacks.successCriteriaEvaluated);
-              }
-            }
-          }
-        }
-      },
-      successCriteria: {}
-    }
-  },
-
   /**
    * Main run function for quail.
    */
   run: function (options) {
-    function buildTests (assessmentList) {
+
+    function buildTests (assessmentList, options) {
+      let htmlElement = options.html || DOM.scry('html');
       // Create an empty TestCollection.
       var testCollection = TestCollection([], {
-        scope: options.html || document
+        scope: htmlElement
       });
 
-      for (var i = 0, il = assessmentList.length; i < il; ++i) {
-        let name = assessmentList[i];
+      assessmentList.forEach((name) => {
         let mod = _Assessments.get(name);
         if (mod) {
           testCollection.set(name, {
-            scope: options.html || null,
+            scope: htmlElement,
             callback: mod.run,
             ...mod.meta
           });
         }
-      }
+      });
       return testCollection;
     }
 
@@ -71,14 +48,14 @@ var quail = {
      */
     function _run (testCollection) {
       // Set up Guideline-specific behaviors.
-      // var noop = function () {};
-      // for (var guideline in quail.guidelines) {
-      //   if (quail.guidelines[guideline] && typeof quail.guidelines[guideline].setup === 'function') {
-      //     quail.guidelines[guideline].setup(testCollection, this, {
-      //       successCriteriaEvaluated: options.successCriteriaEvaluated || noop
-      //     });
-      //   }
-      // }
+      var noop = function () {};
+      for (var guideline in Guideline) {
+        if (Guideline[guideline] && typeof Guideline[guideline].setup === 'function') {
+          Guideline[guideline].setup(testCollection, quail, {
+            successCriteriaEvaluated: options.successCriteriaEvaluated || noop
+          });
+        }
+      }
 
       // Invoke all the registered tests.
       testCollection.run({
@@ -97,8 +74,10 @@ var quail = {
     // }
 
     // If a list of specific tests is provided, use them.
-    var aTests = buildTests(options.accessibilityTests);
-    _run.call(aTests);
+    _run(buildTests(
+      options.accessibilityTests,
+      options
+    ));
   },
 
   // @todo, make this a set of methods that all classes extend.
