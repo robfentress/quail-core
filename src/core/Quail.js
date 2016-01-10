@@ -14,14 +14,6 @@ const _Assessments = require('_Assessments');
 
 var quail = {
 
-  options: {},
-
-  html: null,
-
-  accessibilityResults: {},
-
-  accessibilityTests: null,
-
   guidelines: {
     wcag: {
       /**
@@ -117,7 +109,7 @@ var quail = {
 
     // Create an empty TestCollection.
     quail.tests = TestCollection([], {
-      scope: quail.html || null
+      scope: options.scope || document
     });
 
     // Let wcag2 run itself, will call quail again when it knows what
