@@ -64,7 +64,7 @@ var wcag2 = (function () {
     });
 
     // Run quail with the tests instead of the guideline
-    $(quail.html).quail({
+    $(document).quail({
       accessibilityTests: accessibilityTests,
       // Have wcag2 intercept the callback
       testCollectionComplete: createCallback(
