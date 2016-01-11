@@ -1,5 +1,5 @@
 /**
- * @providesModule quail
+ * @providesModule Quail
  */
 
 'use strict';
@@ -13,10 +13,10 @@ const Guideline = require('Guideline');
 const TestCollection = require('TestCollection');
 const _Assessments = require('_Assessments');
 
-var quail = {
+var Quail = {
 
   /**
-   * Main run function for quail.
+   * Main run function for Quail.
    */
   run: function (options) {
 
@@ -33,7 +33,7 @@ var quail = {
       else {
         assessmentsToRun = _Assessments.keys();
       }
-      assessmentList.forEach((name) => {
+      assessmentsToRun.forEach((name) => {
         let mod = _Assessments.get(name);
         if (mod) {
           testCollection.set(name, {
@@ -57,7 +57,7 @@ var quail = {
       var noop = function () {};
       for (var guideline in Guideline) {
         if (Guideline[guideline] && typeof Guideline[guideline].setup === 'function') {
-          Guideline[guideline].setup(testCollection, quail, {
+          Guideline[guideline].setup(testCollection, Quail, {
             successCriteriaEvaluated: options.successCriteriaEvaluated || noop
           });
         }
@@ -73,7 +73,7 @@ var quail = {
       });
     }
 
-    // Let wcag2 run itself, will call quail again when it knows what
+    // Let wcag2 run itself, will call Quail again when it knows what
     // to
     // if (options.guideline === 'wcag2') {
     //   wcag2.run(options);
@@ -105,9 +105,9 @@ var quail = {
 };
 
 globalQuail.run = globalQuail.run || function (...args) {
-  quail.run(...args);
+  Quail.run(...args);
 }
 
 window.globalQuail = globalQuail;
 
-module.exports = quail;
+module.exports = Quail;
