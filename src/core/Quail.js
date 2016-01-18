@@ -4,7 +4,7 @@
 
 'use strict';
 
-require('babel-polyfill/dist/polyfill');
+require('babel-polyfill');
 
 var globalQuail = window.globalQuail || {};
 

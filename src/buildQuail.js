@@ -45,16 +45,17 @@ function runBrowserify (config) {
           // Add the module that will output results to the console.
           files.push(path.join(__dirname, 'etc/runQuailOutputToConsole.js'));
         }
-        browserify(files, {
-          paths: paths,
-          options: {
-            debug: true
-          }
-        })
+        browserify({
+            paths: paths,
+            options: {
+              debug: false
+            }
+          })
+          .transform(babelify)
+          .add(files)
           .on('error', function (err) {
             console.error('Error : ' + err.message);
           })
-          .transform(babelify)
           .bundle()
           .pipe(
             fs.createWriteStream(
