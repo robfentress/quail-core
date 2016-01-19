@@ -14,12 +14,10 @@ const TestCollection = require('TestCollection');
 const _Assessments = require('_Assessments');
 
 var Quail = {
-
   /**
    * Main run function for Quail.
    */
   run: function (options) {
-
     function buildTests (assessmentList, options) {
       let htmlElement = options.html || DOM.scry('html');
       let keys;
