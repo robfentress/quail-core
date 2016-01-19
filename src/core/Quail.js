@@ -22,6 +22,7 @@ var Quail = {
 
     function buildTests (assessmentList, options) {
       let htmlElement = options.html || DOM.scry('html');
+      let keys;
       // Create an empty TestCollection.
       var testCollection = TestCollection([], {
         scope: htmlElement
@@ -31,7 +32,14 @@ var Quail = {
         assessmentsToRun = assessmentList;
       }
       else {
-        assessmentsToRun = _Assessments.keys();
+        keys = _Assessments.keys();
+        let key, next;
+        do {
+          next = keys.next();
+          key = next.value;
+          assessmentsToRun.push(key);
+        }
+        while (!next.done);
       }
       assessmentsToRun.forEach((name) => {
         let mod = _Assessments.get(name);
