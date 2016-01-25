@@ -1,7 +1,7 @@
 {
   "name": "@quailjs/quail-core",
   "description": "Quail, the framework for building accessibility testing packages.",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "author": {
     "name": "Jesse Beach",
     "email": "splendidnoise@gmail.com",
