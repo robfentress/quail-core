@@ -36,6 +36,15 @@ let DOM = {
         );
       });
     }
+    else if (context && context.constructor === NodeList) {
+      for (let i = 0, il = context.length; i < il; i++) {
+        let ct = context[i];
+        ct && _assertIsDom(ct, 'scry');
+        elements = elements.concat(
+          select.all(selector, ct)
+        );
+      }
+    }
     else {
       context && _assertIsDom(context, 'scry');
       elements = elements.concat(

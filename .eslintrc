@@ -31,6 +31,7 @@
   "globals": {
     "window": true,
     "Node": true,
+    "NodeList": true,
     "XMLHttpRequest": true,
     "document": true,
     "jQuery": true,
