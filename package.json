@@ -10,9 +10,9 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git://github.com/jessebeach/quail-core.git"
+    "url": "git://github.com/quailjs/quail-core.git"
   },
-  "bugs": "http://github.com/jessebeach/quail-core/issues",
+  "bugs": "http://github.com/quailjs/quail-core/issues",
   "dependencies": {
     "babel-plugin-transform-object-rest-spread": "^6.1.18",
     "babel-polyfill": "^6.2.0",
