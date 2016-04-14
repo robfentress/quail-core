@@ -5,7 +5,15 @@
 const DataSet = require('data-set');
 const documentOffset = require('document-offset');
 const isDom = require('is-dom');
-const select = require('dom-select');
+
+// Inlined https://github.com/npm-dom/dom-select after npm unpublish
+let select = {
+  all: (selector, parent) => {
+    parent || (parent = document);
+    var selection = parent.querySelectorAll(selector);
+    return Array.prototype.slice.call(selection);
+  }
+}
 
 let _isDomError = (methodName) => {
   throw new Error('Non-DOM object passed to the method DOM.' + methodName);

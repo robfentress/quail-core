@@ -2,6 +2,7 @@ const Case = require('Case');
 const Quail = {};
 const Test = require('Test');
 const TestCollection = require('TestCollection');
+const sinon = require('sinon');
 
 xdescribe('TestCollection', function () {
 
