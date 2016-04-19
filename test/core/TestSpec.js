@@ -152,14 +152,14 @@ describe('Test', function () {
       var sc = {
         '1.1.1': {
           'techniques': [
-            "F65",
-            "G74",
-            "H24"
+            'F65',
+            'G74',
+            'H24'
           ]
         },
         '1.4.3': {
           'techniques': [
-            "G145"
+            'G145'
           ]
         }
       };

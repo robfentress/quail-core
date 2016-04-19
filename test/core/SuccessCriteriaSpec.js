@@ -37,9 +37,9 @@ describe('SuccessCriteria', function () {
         'wcag': {
           '1.1.1': {
             'techniques': [
-              "F65",
-              "G74",
-              "H24"
+              'F65',
+              'G74',
+              'H24'
             ]
           }
         }
@@ -154,9 +154,9 @@ describe('SuccessCriteria', function () {
         'wcag': {
           '1.1.1': {
             'techniques': [
-              "F65",
-              "G74",
-              "H24"
+              'F65',
+              'G74',
+              'H24'
             ]
           }
         }
@@ -206,10 +206,10 @@ describe('SuccessCriteria', function () {
         var g = {
           'wcag': {
             '1.3.2': {
-              'techniques': ["G57"]
+              'techniques': ['G57']
             },
             '4.1.1': {
-              'techniques': ["F49"]
+              'techniques': ['F49']
             }
           }
         }
@@ -240,9 +240,9 @@ describe('SuccessCriteria', function () {
         'wcag': {
           '1.1.1': {
             'techniques': [
-              "F65",
-              "G74",
-              "H24"
+              'F65',
+              'G74',
+              'H24'
             ]
           }
         }
@@ -287,9 +287,9 @@ describe('SuccessCriteria', function () {
         'wcag': {
           '1.1.1': {
             'techniques': [
-              "F65",
-              "G74",
-              "H24"
+              'F65',
+              'G74',
+              'H24'
             ]
           }
         }
