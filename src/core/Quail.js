@@ -4,8 +4,6 @@
 
 'use strict';
 
-require('babel-polyfill');
-
 var globalQuail = window.globalQuail || {};
 
 const DOM = require('DOM');

@@ -4,7 +4,7 @@ const SuccessCriteria = require('SuccessCriteria');
 const Test = require('Test');
 const TestCollection = require('TestCollection');
 
-const newElement = require('new-element');
+const newElement = require('../ext/new-element');
 
 describe('SuccessCriteria', function () {
   var _successCriteria;

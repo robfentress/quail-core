@@ -2,8 +2,8 @@ const Case = require('Case');
 const Quail = {};
 const Test = require('Test');
 const TestCollection = require('TestCollection');
-
-const newElement = require('new-element');
+const sinon = require('sinon');
+const newElement = require('../ext/new-element');
 
 describe('Test', function () {
   var _test;
