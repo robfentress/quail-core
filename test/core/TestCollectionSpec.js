@@ -1,4 +1,3 @@
-const Case = require('Case');
 const Quail = {};
 const Test = require('Test');
 const TestCollection = require('TestCollection');
@@ -132,7 +131,7 @@ xdescribe('TestCollection', function () {
       var testName;
       for (var i = 0; i < 5; ++i) {
         testName = 'fakeTest-' + i;
-        Quail[testName] = function (test) {};
+        Quail[testName] = function () {};
         _test = new Test(testName, {
           'options': {
             'selector': 'i.unittest'
@@ -141,7 +140,7 @@ xdescribe('TestCollection', function () {
         _testCollection.add(_test);
       }
       // Add a test that will time out.
-      Quail['timeoutTest'] = function (test) {};
+      Quail['timeoutTest'] = function () {};
       _testCollection.add(new Test('timeoutTest', {}));
       _testCollection.run();
     });

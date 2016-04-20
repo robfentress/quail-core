@@ -88,7 +88,7 @@ describe('SuccessCriteria', function () {
 
       beforeEach(function () {
         _testCollection = new TestCollection();
-        evaluator = function (tests) {
+        evaluator = function () {
           _successCriteria.set('status', 'passed');
         };
         _successCriteria = SuccessCriteria({
@@ -134,7 +134,7 @@ describe('SuccessCriteria', function () {
       _successCriteria = new SuccessCriteria({
         'name': 'wcag:1.1.1'
       });
-      _successCriteria.set('preEvaluator', function (testCollection) {
+      _successCriteria.set('preEvaluator', function () {
         // We skip all the tests.
         // This will set the status as 'inapplicable'.
         return false;
@@ -144,7 +144,7 @@ describe('SuccessCriteria', function () {
     });
 
     it('should should skip all tests if it fails', function (done) {
-      listener.listenTo(_successCriteria, 'successCriteriaEvaluated', function (eventName, successCriteria, testCollection) {
+      listener.listenTo(_successCriteria, 'successCriteriaEvaluated', function (eventName, successCriteria) {
         expect(successCriteria.get('status')).to.equal('inapplicable');
         done();
       });
@@ -183,7 +183,7 @@ describe('SuccessCriteria', function () {
 
     beforeEach(function () {
       _testCollection = new TestCollection();
-      evaluator = function (tests) {
+      evaluator = function () {
         _successCriteria.set('status', 'passed');
       };
       _successCriteria = SuccessCriteria({
@@ -196,7 +196,7 @@ describe('SuccessCriteria', function () {
     xdescribe('noTestCoverage', function () {
 
       it('should be returned when no tests are available for the SuccessCriteria', function (done) {
-        listener.listenTo(_successCriteria, 'successCriteriaEvaluated', function (eventName, successCriteria, testCollection) {
+        listener.listenTo(_successCriteria, 'successCriteriaEvaluated', function (eventName, successCriteria) {
           expect(successCriteria.get('status')).to.equal('noTestCoverage');
           done();
         });
@@ -229,7 +229,7 @@ describe('SuccessCriteria', function () {
 
     xdescribe('noResults', function () {
       it('should be returned when tests do not produce results for the SuccessCriteria', function (done) {
-        listener.listenTo(_successCriteria, 'successCriteriaEvaluated', function (eventName, successCriteria, testCollection) {
+        listener.listenTo(_successCriteria, 'successCriteriaEvaluated', function (eventName, successCriteria) {
           expect(successCriteria.get('status')).to.equal('noResults');
           done();
         });
@@ -275,7 +275,7 @@ describe('SuccessCriteria', function () {
     });
 
     xit('should return the correct test totals', function (done) {
-      listener.listenTo(_successCriteria, 'successCriteriaEvaluated', function (eventName, successCriteria, testCollection) {
+      listener.listenTo(_successCriteria, 'successCriteriaEvaluated', function (eventName, successCriteria) {
         expect(successCriteria.get('totals')['passed']).to.equal(1);
         expect(successCriteria.get('totals')['failed']).to.equal(10);
         expect(successCriteria.get('totals')['cases']).to.equal(11);
