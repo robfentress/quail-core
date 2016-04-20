@@ -1,6 +1,6 @@
 const Case = require('Case');
 
-describe("Case", function() {
+describe('Case', function() {
   var _case;
   beforeEach(function () {
     _case = new Case({
