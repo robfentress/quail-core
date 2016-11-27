@@ -16,7 +16,7 @@ module.exports = function(karma) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/core/*Spec.js',
+      'test/core/*Spec.js'
     ],
 
     // preprocess matching files before serving them to the browser
@@ -82,6 +82,6 @@ module.exports = function(karma) {
           bundle.transform(babelify);
         });
       }
-    },
+    }
   });
 };

@@ -2,8 +2,8 @@ const Case = require('Case');
 const Quail = {};
 const Test = require('Test');
 const TestCollection = require('TestCollection');
-
-const newElement = require('new-element');
+const sinon = require('sinon');
+const newElement = require('../ext/new-element');
 
 describe('Test', function () {
   var _test;
@@ -61,7 +61,7 @@ describe('Test', function () {
 
     describe('each', function () {
       it('should create two Cases', function (done) {
-        _testCollection.listenTo(_test, 'complete', function (eventName, thisTest, _case) {
+        _testCollection.listenTo(_test, 'complete', function () {
           expect(_test.length).to.equal(10);
           done();
         });
@@ -70,7 +70,7 @@ describe('Test', function () {
 
       it('should iterate over the two cases', function (done) {
         var spy = sinon.spy();
-        _testCollection.listenTo(_test, 'complete', function (eventName, thisTest, _case) {
+        _testCollection.listenTo(_test, 'complete', function () {
           _test.each(spy);
           sinon.assert.callCount(spy, 10);
           done();
@@ -82,7 +82,7 @@ describe('Test', function () {
     describe('findCasesBySelector', function () {
       var _testCollection;
       it('should find cases by selector', function (done) {
-        _testCollection.listenTo(_test, 'complete', function (eventName, thisTest, _case) {
+        _testCollection.listenTo(_test, 'complete', function (eventName, thisTest) {
           var len = thisTest.findCasesBySelector('span.koala').length;
           len += thisTest.findCasesBySelector('span.piggy').length;
           expect(len).to.equal(10);
@@ -94,7 +94,7 @@ describe('Test', function () {
 
     describe('findByStatus', function () {
       it('should find cases by status', function (done) {
-        _testCollection.listenTo(_test, 'complete', function (eventName, thisTest, _case) {
+        _testCollection.listenTo(_test, 'complete', function () {
           var cases = _test.findByStatus('failed');
           expect(cases.length).to.equal(5);
           done();
@@ -105,7 +105,7 @@ describe('Test', function () {
 
     xdescribe('groupCasesBySelector', function () {
       it('should group cases by selector', function (done) {
-        _testCollection.listenTo(_test, 'complete', function (eventName, thisTest, _case) {
+        _testCollection.listenTo(_test, 'complete', function (eventName, thisTest) {
           var casesBySelector = thisTest.groupCasesBySelector();
           expect(casesBySelector['span.koala'].length).to.equal(5);
           expect(casesBySelector['span.piggy'].length).to.equal(5);
@@ -138,7 +138,7 @@ describe('Test', function () {
     });
 
     it('should group cases by HTML', function (done) {
-      _testCollection.listenTo(_test, 'complete', function (eventName, thisTest, _case) {
+      _testCollection.listenTo(_test, 'complete', function (eventName, thisTest) {
         var casesByHtml = thisTest.groupCasesByHtml();
         expect(casesByHtml['<span class="koala"></span>'].length).to.equal(5);
         done();
@@ -152,14 +152,14 @@ describe('Test', function () {
       var sc = {
         '1.1.1': {
           'techniques': [
-            "F65",
-            "G74",
-            "H24"
+            'F65',
+            'G74',
+            'H24'
           ]
         },
         '1.4.3': {
           'techniques': [
-            "G145"
+            'G145'
           ]
         }
       };
@@ -205,7 +205,7 @@ describe('Test', function () {
       });
 
       it('should fire the resolved event', function (done) {
-        _testCollection.listenTo(_test, 'resolve', function (eventName, thisTest, _case) {
+        _testCollection.listenTo(_test, 'resolve', function (eventName) {
           expect(eventName).to.equal('resolve');
           done();
         });
